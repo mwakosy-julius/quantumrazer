@@ -10,43 +10,55 @@ export async function getCartSessionIdFromCookie(): Promise<string | undefined> 
 }
 
 export async function getCartItemCount(): Promise<number> {
-  const session = await auth();
-  const userId = session?.user?.id;
-  const sessionId = userId ? undefined : await getCartSessionIdFromCookie();
+  try {
+    if (!process.env.DATABASE_URL?.trim()) return 0;
 
-  if (!userId && !sessionId) return 0;
+    const session = await auth();
+    const userId = session?.user?.id;
+    const sessionId = userId ? undefined : await getCartSessionIdFromCookie();
 
-  const agg = await prisma.cartItem.aggregate({
-    where: userId ? { userId } : { sessionId },
-    _sum: { quantity: true },
-  });
-  return agg._sum.quantity ?? 0;
+    if (!userId && !sessionId) return 0;
+
+    const agg = await prisma.cartItem.aggregate({
+      where: userId ? { userId } : { sessionId },
+      _sum: { quantity: true },
+    });
+    return agg._sum.quantity ?? 0;
+  } catch {
+    return 0;
+  }
 }
 
 export async function getCartItemsDetailed() {
-  const session = await auth();
-  const userId = session?.user?.id;
-  let sessionId: string | undefined;
-  if (!userId) {
-    sessionId = await getCartSessionIdFromCookie();
-    if (!sessionId) return [];
-  }
+  try {
+    if (!process.env.DATABASE_URL?.trim()) return [];
 
-  return prisma.cartItem.findMany({
-    where: userId ? { userId } : { sessionId },
-    include: {
-      variant: {
-        include: {
-          product: {
-            include: {
-              images: { where: { isPrimary: true }, take: 1 },
+    const session = await auth();
+    const userId = session?.user?.id;
+    let sessionId: string | undefined;
+    if (!userId) {
+      sessionId = await getCartSessionIdFromCookie();
+      if (!sessionId) return [];
+    }
+
+    return await prisma.cartItem.findMany({
+      where: userId ? { userId } : { sessionId },
+      include: {
+        variant: {
+          include: {
+            product: {
+              include: {
+                images: { where: { isPrimary: true }, take: 1 },
+              },
             },
           },
         },
       },
-    },
-    orderBy: { addedAt: "asc" },
-  });
+      orderBy: { addedAt: "asc" },
+    });
+  } catch {
+    return [];
+  }
 }
 
 export type CheckoutCartLine = {
