@@ -2,23 +2,29 @@ import { headers } from "next/headers";
 import type Stripe from "stripe";
 
 import { prisma } from "@/lib/prisma";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  if (!stripe || !process.env.STRIPE_WEBHOOK_SECRET) {
-    return new Response("Stripe not configured", { status: 503 });
-  }
-  const body = await req.text();
-  const signature = headers().get("stripe-signature");
+  const stripe = getStripe();
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  if (!signature || !secret) {
-    return new Response("Missing stripe webhook configuration", { status: 400 });
+  if (!stripe || !secret) {
+    return new Response("Stripe not configured", { status: 503 });
+  }
+
+  const body = await req.text();
+  const signature = headers().get("stripe-signature");
+
+  if (!signature) {
+    return new Response("Missing stripe-signature", { status: 400 });
   }
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(body, signature!, secret);
+    event = stripe.webhooks.constructEvent(body, signature, secret);
   } catch {
     return new Response("Invalid signature", { status: 400 });
   }

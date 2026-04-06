@@ -9,7 +9,7 @@ import { auth } from "@/lib/auth";
 import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
 import { actionClient } from "@/lib/safe-action";
-import { stripe } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 import { CheckoutSchema } from "@/lib/validations";
 
 const CART_COOKIE = "cart_session";
@@ -20,6 +20,7 @@ const PaymentIntentSchema = z.object({
 });
 
 export const createPaymentIntentAction = actionClient(PaymentIntentSchema, async (parsedInput) => {
+  const stripe = getStripe();
   if (!stripe) {
     return {
       clientSecret: "pi_dev_placeholder_secret",
@@ -71,6 +72,7 @@ export const createOrderAction = actionClient(CheckoutSchema, async (parsedInput
   const tax = Math.round(subtotal * 0.08 * 100) / 100;
   const total = Math.round((subtotal + shippingCost + tax) * 100) / 100;
 
+  const stripe = getStripe();
   if (stripe) {
     const intent = await stripe.paymentIntents.retrieve(parsedInput.paymentIntentId);
     if (intent.status !== "succeeded" && intent.status !== "processing") {
