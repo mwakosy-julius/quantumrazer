@@ -34,6 +34,10 @@ export interface ProductSummary {
   secondary_image_url: string | null;
   avg_rating: number | null;
   review_count: number;
+  /** Cheapest in-stock variant for quick-add */
+  default_variant_id: string | null;
+  /** One-line spec teaser for cards (e.g. RAM · storage hints) */
+  spec_preview: string | null;
 }
 
 export interface ProductVariant {

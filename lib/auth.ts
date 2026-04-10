@@ -4,14 +4,18 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
+import { clearInvalidAuthUrlEnv } from "@/lib/auth-env";
 import { prisma } from "@/lib/prisma";
 import { LoginSchema } from "@/lib/validations";
+
+clearInvalidAuthUrlEnv();
 
 const googleConfigured =
   Boolean(process.env.GOOGLE_CLIENT_ID) && Boolean(process.env.GOOGLE_CLIENT_SECRET);
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  trustHost: true,
   session: { strategy: "jwt" },
   pages: {
     signIn: "/login",
@@ -50,6 +54,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/") && !url.startsWith("//")) {
+        return `${baseUrl}${url}`;
+      }
+      try {
+        return new URL(url).origin === new URL(baseUrl).origin ? url : baseUrl;
+      } catch {
+        return baseUrl;
+      }
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;

@@ -1,73 +1,64 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
-const columns = [
-  {
-    title: "Shoes",
-    links: ["All Shoes", "Running", "Basketball", "Jordan", "Training", "Casual"],
-  },
-  {
-    title: "Clothing",
-    links: ["All Clothing", "Tops", "Shorts", "Tracksuits", "Hoodies", "Socks"],
-  },
-  {
-    title: "Shop By Sport",
-    links: ["Running", "Basketball", "Football", "Training", "Yoga", "Golf"],
-  },
-];
+import { MEGA_BY_KEY, type MegaMenuKey } from "@/lib/constants";
 
-export function MegaMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function MegaMenu({
+  menuKey,
+  onClose,
+}: {
+  menuKey: MegaMenuKey | null;
+  onClose: () => void;
+}) {
+  const data = menuKey ? MEGA_BY_KEY[menuKey] : null;
+
+  if (!menuKey || !data) return null;
+
   return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.2 }}
-          className="absolute left-0 right-0 top-full z-[9998] border-b border-grey-200 bg-white shadow-mega"
-          onMouseLeave={onClose}
-        >
-          <div className="mx-auto flex max-w-content gap-12 px-[48px] py-8">
-            {columns.map((col) => (
-              <div key={col.title} className="min-w-[160px]">
-                <p className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-grey-500">{col.title}</p>
-                <ul className="space-y-2">
-                  {col.links.map((l) => (
-                    <li key={l}>
-                      <Link
-                        href={`/products?sport=${encodeURIComponent(l)}`}
-                        className="text-[14px] text-black hover:underline"
-                      >
-                        {l}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-            <div className="ml-auto hidden w-[320px] shrink-0 md:block">
-              <Link href="/collections/air-max" className="group block overflow-hidden">
-                <div className="relative aspect-video overflow-hidden bg-grey-100">
-                  <Image
-                    src="https://picsum.photos/seed/mega/640/360"
-                    alt="Featured"
-                    fill
-                    className="object-cover transition-transform duration-[400ms] ease-out group-hover:scale-[1.03]"
-                  />
-                  <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/50 to-transparent p-4 text-white">
-                    <p className="text-lg font-black uppercase">Air Max</p>
-                    <span className="text-sm underline">Shop Now</span>
-                  </div>
-                </div>
-              </Link>
+    <div
+      className="absolute left-0 right-0 top-full z-[9998] border-b border-t border-grey-200 bg-white shadow-mega"
+      onMouseLeave={onClose}
+    >
+      <div className="mx-auto flex max-w-content flex-col gap-10 px-6 py-8 lg:flex-row lg:gap-12">
+        <div className="grid flex-1 grid-cols-2 gap-8 lg:grid-cols-4 lg:gap-12">
+          {data.columns.map((col) => (
+            <div key={col.title}>
+              <p className="mb-5 border-b border-grey-200 pb-2 text-[13px] font-medium uppercase tracking-[0.06em] text-grey-500">
+                {col.title}
+              </p>
+              <ul>
+                {col.links.map((l) => (
+                  <li key={l.label}>
+                    <Link href={l.href} className="group block py-1.5 text-[15px] text-black hover:font-medium">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          ))}
+        </div>
+        {data.featuredImage && (
+          <Link href={data.featuredHref ?? "/products"} className="group mx-auto block w-full max-w-[280px] shrink-0 lg:mx-0 lg:w-[280px]">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-brand bg-grey-100">
+              <Image
+                src={data.featuredImage}
+                alt=""
+                fill
+                className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-[1.03]"
+                sizes="280px"
+              />
+            </div>
+            {data.featuredEyebrow && (
+              <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-grey-500">{data.featuredEyebrow}</p>
+            )}
+            {data.featuredTitle && <p className="mt-1 text-[15px] font-medium text-black">{data.featuredTitle}</p>}
+            <span className="mt-2 inline-block text-[15px] text-black underline">Shop Now</span>
+          </Link>
+        )}
+      </div>
+    </div>
   );
 }

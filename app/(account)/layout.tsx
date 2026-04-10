@@ -27,24 +27,30 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   };
 
   return (
-    <div className="mx-auto flex max-w-content flex-col gap-10 px-[var(--content-padding)] py-12 md:flex-row">
-      <aside className="w-full shrink-0 md:w-56">
-        <nav className="space-y-2 text-[14px]">
+    <div className="mx-auto flex max-w-content flex-col gap-10 bg-white px-6 py-12 md:flex-row md:px-[var(--content-padding)]">
+      <aside className="w-full shrink-0 border-grey-200 md:w-56 md:border-r md:pr-6">
+        <nav className="space-y-0 text-[15px] font-medium uppercase tracking-[0.04em] text-grey-500">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className={`block rounded px-3 py-2 hover:bg-grey-100 ${pathname === l.href ? "font-semibold" : ""}`}
+              className={`block border-b border-grey-200 py-3 text-black ${
+                pathname === l.href ? "font-bold" : "font-medium"
+              }`}
             >
               {l.label}
             </Link>
           ))}
-          <button type="button" className="block w-full px-3 py-2 text-left hover:bg-grey-100" onClick={() => void signOutClient()}>
+          <button
+            type="button"
+            className="block w-full border-b border-grey-200 py-3 text-left font-medium text-black hover:text-grey-500"
+            onClick={() => void signOutClient()}
+          >
             Sign Out
           </button>
         </nav>
       </aside>
-      <div className="flex-1">{children}</div>
+      <div className="min-w-0 flex-1 text-black">{children}</div>
     </div>
   );
 }

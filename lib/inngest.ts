@@ -49,4 +49,12 @@ const syncInventory = inngest.createFunction(
   },
 );
 
-export const inngestFunctions = [sendOrderConfirmation, syncInventory];
+const orderStatusUpdated = inngest.createFunction(
+  { id: "order-status-updated", name: "Order status updated hook" },
+  { event: "order/status-updated" },
+  async ({ event }) => {
+    return { ok: true, orderId: event.data.orderId as string };
+  },
+);
+
+export const inngestFunctions = [sendOrderConfirmation, syncInventory, orderStatusUpdated];

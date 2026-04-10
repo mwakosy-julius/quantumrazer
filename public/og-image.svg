@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#FFFFFF"/>
+  <g transform="translate(420, 215)">
+    <path fill="#4A7C7C" d="M 46 6 C 70 6 88 22 92 46 L 78 42 L 64 50 L 78 58 C 86 72 74 92 50 94 C 32 94 18 82 12 64 C 6 46 10 26 24 14 C 30 9 38 6 46 6 Z" transform="scale(1.4)"/>
+    <text x="150" y="95" font-family="Bebas Neue, sans-serif" font-size="72" fill="#111111" letter-spacing="0.05em">QUANTUM RAZER</text>
+  </g>
+</svg>

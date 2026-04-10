@@ -9,10 +9,11 @@ const genderToUi: Record<PrismaGender, ProductSummary["gender"]> = {
   UNISEX: "unisex",
 };
 
-type ListRow = {
+export type ProductListRow = {
   id: string;
   name: string;
   slug: string;
+  description?: string | null;
   brand: string;
   gender: PrismaGender;
   sport: string | null;
@@ -20,11 +21,11 @@ type ListRow = {
   isNew: boolean;
   category: { slug: string } | null;
   images: { url: string }[];
-  variants: { price: unknown; compareAtPrice: unknown | null }[];
+  variants: { id: string; price: unknown; compareAtPrice: unknown | null; size: string }[];
   reviews: { rating: number }[];
 };
 
-export function mapProductListRowToSummary(p: ListRow): ProductSummary {
+export function mapProductListRowToSummary(p: ProductListRow): ProductSummary {
   const prices = p.variants.map((v) => Number(v.price));
   const minPriceNum = prices.length ? Math.min(...prices) : null;
   const min_price = minPriceNum != null ? minPriceNum.toFixed(2) : null;
@@ -36,6 +37,16 @@ export function mapProductListRowToSummary(p: ListRow): ProductSummary {
 
   const ratings = p.reviews.map((r) => r.rating);
   const avg_rating = ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : null;
+
+  let cheapestId: string | null = null;
+  if (p.variants.length && minPriceNum != null) {
+    const sorted = [...p.variants].sort((a, b) => Number(a.price) - Number(b.price));
+    cheapestId = sorted[0]?.id ?? null;
+  }
+  const v0 = p.variants[0];
+  const spec_preview = v0
+    ? `${v0.size} · ${p.variants.length} config${p.variants.length === 1 ? "" : "s"}`
+    : null;
 
   return {
     id: p.id,
@@ -53,6 +64,8 @@ export function mapProductListRowToSummary(p: ListRow): ProductSummary {
     secondary_image_url: p.images[1]?.url ?? null,
     avg_rating,
     review_count: p.reviews.length,
+    default_variant_id: cheapestId,
+    spec_preview,
   };
 }
 
@@ -97,7 +110,7 @@ type DetailProduct = {
 
 export function mapPrismaProductToDetail(
   p: DetailProduct,
-  relatedRows: ListRow[],
+  relatedRows: ProductListRow[],
   reviewAvg: number | null,
   reviewCount: number,
 ): ProductDetail {

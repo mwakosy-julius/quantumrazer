@@ -217,6 +217,7 @@ model Order {
   tax                   Decimal     @db.Decimal(10, 2)
   total                 Decimal     @db.Decimal(10, 2)
   stripePaymentIntentId String?
+  trackingNumber        String?
   shippingAddress       Json
   billingAddress        Json?
   notes                 String?

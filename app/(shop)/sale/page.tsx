@@ -26,7 +26,7 @@ export default async function SalePage({ searchParams }: Props) {
         <span className="mx-2">/</span>
         <span className="text-black">Sale</span>
       </nav>
-      <h1 className="text-3xl font-black text-red-brand">Sale</h1>
+      <h1 className="text-[28px] font-bold text-black">Sale</h1>
       <p className="mt-2 text-[14px] text-grey-500">{total} marked-down styles</p>
       <div className="mt-10">
         <ProductGrid products={summaries} />

@@ -6,9 +6,9 @@ export default async function CheckoutPage() {
 
   if (isEmpty) {
     return (
-      <div className="mx-auto max-w-content px-[var(--content-padding)] py-12">
-        <h1 className="text-2xl font-black">Checkout</h1>
-        <p className="mt-4 text-grey-500">Your bag is empty.</p>
+      <div className="mx-auto max-w-content px-6 py-12 md:px-[var(--content-padding)]">
+        <h1 className="text-[22px] font-bold text-black">Checkout</h1>
+        <p className="mt-4 text-[15px] text-grey-500">Your bag is empty.</p>
       </div>
     );
   }

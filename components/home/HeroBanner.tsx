@@ -1,68 +1,53 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/Button";
-
-const slides = [
-  {
-    image: "https://picsum.photos/seed/hero1/1920/1080",
-    eyebrow: "New Season",
-    title: "Run The City",
-    copy: "Responsive cushioning meets bold design for your daily miles.",
-    primary: { label: "Shop", href: "/products" },
-    secondary: { label: "Learn More", href: "/collections/pegasus" },
-  },
-  {
-    image: "https://picsum.photos/seed/hero2/1920/1080",
-    eyebrow: "Members",
-    title: "Early Access",
-    copy: "Unlock drops, free delivery, and member-only styles.",
-    primary: { label: "Join Us", href: "/register" },
-    secondary: { label: "Sign In", href: "/login" },
-  },
-];
+import { BRAND } from "@/lib/constants";
+import { IMAGES, imgHero1920 } from "@/lib/images";
 
 export function HeroBanner() {
-  const [idx, setIdx] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setIdx((i) => (i + 1) % slides.length), 6000);
-    return () => clearInterval(t);
-  }, []);
-  const s = slides[idx];
+  const heroSrc = imgHero1920(IMAGES.lifestyle.dualMonitor);
+
   return (
-    <section className="relative h-[85vh] w-full overflow-hidden">
-      <Image src={s.image} alt="" fill priority className="object-cover object-center" sizes="100vw" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-      <div className="absolute bottom-0 left-0 max-w-[480px] p-12 text-white">
-        <p className="text-[13px] uppercase tracking-[0.08em]">{s.eyebrow}</p>
-        <h1 className="mt-2 font-black uppercase leading-none tracking-tight" style={{ fontSize: "clamp(40px,5vw,72px)" }}>
-          {s.title}
-        </h1>
-        <p className="mt-4 text-[15px] leading-relaxed">{s.copy}</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link href={s.primary.href}>
-            <Button className="bg-white text-black hover:bg-grey-100">{s.primary.label}</Button>
-          </Link>
-          <Link href={s.secondary.href}>
-            <Button variant="outline" className="border-white text-white hover:bg-white/10">
-              {s.secondary.label}
-            </Button>
-          </Link>
-        </div>
+    <section className="relative w-full bg-black">
+      <div className="relative min-h-[400px] w-full md:min-h-[520px]" style={{ height: "min(70vh, 820px)" }}>
+        <Image
+          src={heroSrc}
+          alt=""
+          fill
+          className="object-cover"
+          style={{ objectPosition: "center 30%" }}
+          priority
+          sizes="100vw"
+        />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%)",
+          }}
+        />
       </div>
-      <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            type="button"
-            aria-label={`Go to slide ${i + 1}`}
-            className={`h-2 w-2 rounded-full ${i === idx ? "bg-white" : "bg-white/40"}`}
-            onClick={() => setIdx(i)}
-          />
-        ))}
+      <div className="absolute inset-0 flex items-end pb-12 pl-6 pr-6 pt-24 md:px-12 md:pb-12">
+        <div className="mx-auto w-full max-w-content">
+          <h1 className="max-w-[600px] text-[clamp(40px,6vw,80px)] font-black uppercase leading-none tracking-[-0.02em] text-white">
+            BUILT FOR CREATORS
+          </h1>
+          <p className="mt-4 max-w-[500px] text-[18px] font-normal leading-normal text-white">{BRAND.tagline}</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/products"
+              className="inline-flex items-center justify-center rounded-pill bg-white px-8 py-4 text-[16px] font-medium tracking-[0.02em] text-black transition-colors duration-200 hover:bg-[rgba(255,255,255,0.85)]"
+            >
+              Shop Now
+            </Link>
+            <Link
+              href="/products?category=laptops"
+              className="inline-flex items-center justify-center rounded-pill bg-[rgba(0,0,0,0.5)] px-8 py-4 text-[16px] font-medium tracking-[0.02em] text-white transition-colors duration-200 hover:bg-[rgba(0,0,0,0.7)]"
+            >
+              View Laptops
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );

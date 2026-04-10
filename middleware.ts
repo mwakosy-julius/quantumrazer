@@ -14,8 +14,15 @@ export default auth((req) => {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (isAdminPath && !req.auth?.user?.isAdmin) {
-    return NextResponse.redirect(new URL("/", req.nextUrl));
+  if (isAdminPath) {
+    if (!isLoggedIn) {
+      const loginUrl = new URL("/login", req.nextUrl);
+      loginUrl.searchParams.set("callbackUrl", path);
+      return NextResponse.redirect(loginUrl);
+    }
+    if (!req.auth?.user?.isAdmin) {
+      return NextResponse.redirect(new URL("/", req.nextUrl));
+    }
   }
 
   return NextResponse.next();

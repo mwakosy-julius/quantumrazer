@@ -6,16 +6,16 @@ export function Badge({
   className,
 }: {
   children: React.ReactNode;
-  variant?: "default" | "sale" | "muted";
+  variant?: "default" | "sale" | "muted" | "creator" | "lowStock" | "featured";
   className?: string;
 }) {
   return (
     <span
       className={cn(
-        "rounded-sm px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide",
-        variant === "default" && "bg-black text-white",
-        variant === "sale" && "bg-red-brand text-white",
-        variant === "muted" && "bg-grey-700 text-white",
+        "rounded-brand px-2 py-1 text-[13px] font-medium",
+        (variant === "default" || variant === "creator" || variant === "featured" || variant === "lowStock" || variant === "muted") &&
+          "bg-white text-black",
+        variant === "sale" && "border border-grey-200 bg-white text-black",
         className,
       )}
     >

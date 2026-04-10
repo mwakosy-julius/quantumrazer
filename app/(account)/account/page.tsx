@@ -4,15 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-const statusColor: Record<string, string> = {
-  pending: "bg-grey-200 text-black",
-  confirmed: "bg-blue-100 text-blue-900",
-  processing: "bg-orange-100 text-orange-900",
-  shipped: "bg-purple-100 text-purple-900",
-  delivered: "bg-green-100 text-green-900",
-  cancelled: "bg-red-100 text-red-900",
-  refunded: "bg-grey-100 text-grey-700",
-};
+const statusBadge = "rounded-brand bg-black px-2.5 py-1 text-[13px] font-medium uppercase text-white";
 
 export default async function AccountPage() {
   const session = await auth();
@@ -26,7 +18,7 @@ export default async function AccountPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-black">Your Orders</h1>
+      <h1 className="text-[22px] font-bold text-black">Your Orders</h1>
       {orders.length === 0 ? (
         <p className="mt-6 text-grey-500">You have no orders yet.</p>
       ) : (
@@ -46,15 +38,13 @@ export default async function AccountPage() {
                 return (
                   <tr key={o.id} className="border-b border-grey-100">
                     <td className="py-3">
-                      <Link href={`/account/orders/${o.orderNumber}`} className="underline">
+                      <Link href={`/account/orders/${o.orderNumber}`} className="text-black underline hover:text-grey-500">
                         {o.orderNumber}
                       </Link>
                     </td>
                     <td className="py-3 text-grey-500">{o.createdAt.toLocaleDateString()}</td>
                     <td className="py-3">
-                      <span className={`rounded-full px-2 py-1 text-[12px] font-medium ${statusColor[key] ?? "bg-grey-100"}`}>
-                        {key}
-                      </span>
+                      <span className={statusBadge}>{key}</span>
                     </td>
                     <td className="py-3 text-right">${Number(o.total).toFixed(2)}</td>
                   </tr>

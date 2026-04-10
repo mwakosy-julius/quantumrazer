@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        black: "var(--black)",
         white: "var(--white)",
+        black: "var(--black)",
         grey: {
           100: "var(--grey-100)",
           200: "var(--grey-200)",
@@ -18,31 +18,31 @@ const config: Config = {
           500: "var(--grey-500)",
           700: "var(--grey-700)",
         },
-        red: { brand: "var(--red)" },
-        gold: "var(--gold)",
+        "logo-green": "var(--logo-green)",
       },
       fontFamily: {
-        sans: ["var(--font-primary)", "Helvetica", "Arial", "sans-serif"],
+        sans: ['"Helvetica Neue"', "Helvetica", "Arial", "sans-serif"],
       },
       maxWidth: {
-        content: "var(--max-width)",
+        content: "1440px",
       },
       spacing: {
-        nav: "var(--nav-height)",
-        announce: "var(--announcement-height)",
+        nav: "60px",
+        announce: "36px",
+      },
+      borderRadius: {
+        brand: "4px",
+        pill: "30px",
+        none: "0",
       },
       boxShadow: {
-        card: "var(--shadow-card)",
-        drawer: "var(--shadow-drawer)",
-        mega: "var(--shadow-mega)",
+        mega: "0 4px 8px rgba(0,0,0,0.06)",
+        dropdown: "0 4px 8px rgba(0,0,0,0.1)",
+        arrow: "0 2px 8px rgba(0,0,0,0.1)",
       },
       transitionDuration: {
         fast: "150ms",
-        med: "300ms",
-        slow: "600ms",
-      },
-      borderRadius: {
-        pill: "var(--radius-pill)",
+        med: "200ms",
       },
     },
   },

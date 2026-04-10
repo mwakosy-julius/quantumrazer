@@ -11,10 +11,14 @@ export function AddToCartButton({
   variantId,
   disabled,
   label = "Add to Bag",
+  variant = "black",
+  className,
 }: {
   variantId: string | null;
   disabled?: boolean;
   label?: string;
+  variant?: "primary" | "inverse" | "black" | "accent";
+  className?: string;
 }) {
   const router = useRouter();
   const openCart = useCartStore((s) => s.openCart);
@@ -22,7 +26,8 @@ export function AddToCartButton({
 
   return (
     <Button
-      className="h-14 w-full text-[16px]"
+      variant={variant}
+      className={className ?? "h-14 w-full text-[15px] font-semibold uppercase tracking-[0.08em]"}
       disabled={disabled || !variantId || state === "loading"}
       onClick={async () => {
         if (!variantId) return;
@@ -35,7 +40,7 @@ export function AddToCartButton({
         setState("done");
         router.refresh();
         openCart();
-        setTimeout(() => setState("idle"), 1500);
+        setTimeout(() => setState("idle"), 2000);
       }}
     >
       {state === "loading" ? "Adding…" : state === "done" ? "Added ✓" : label}

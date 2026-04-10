@@ -4,26 +4,12 @@ import { notFound } from "next/navigation";
 import { ProductDetailClient } from "@/components/product/ProductDetailClient";
 import { getProductBySlug } from "@/lib/data/products";
 import { mapPrismaProductToDetail } from "@/lib/mappers/product";
-import { prisma } from "@/lib/prisma";
 
-export const revalidate = 900;
 export const dynamicParams = true;
+/** Avoid DB access during `next build` (CI / offline); pages render on demand. */
+export const dynamic = "force-dynamic";
 
 type Props = { params: { slug: string } };
-
-export async function generateStaticParams() {
-  try {
-    const products = await prisma.product.findMany({
-      where: { isActive: true },
-      select: { slug: true },
-      take: 100,
-      orderBy: { updatedAt: "desc" },
-    });
-    return products.map((p) => ({ slug: p.slug }));
-  } catch {
-    return [];
-  }
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const row = await getProductBySlug(params.slug);
