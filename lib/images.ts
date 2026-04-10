@@ -51,6 +51,8 @@ export const IMAGES = {
     africanDev: "https://images.unsplash.com/photo-1531482615713-2afd69097998",
     collab: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f",
     womanDesign: "https://images.unsplash.com/photo-1551434678-e076c223a692",
+    /** Museum / gallery hall — strong artistic mood for editorial sections */
+    galleryHall: "https://images.unsplash.com/photo-1549887534-1541e32ddb35",
   },
 } as const;
 

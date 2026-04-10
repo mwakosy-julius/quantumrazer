@@ -1,65 +1,68 @@
-import { BrandStrip } from "@/components/home/BrandStrip";
-import { CategoryGrid } from "@/components/home/CategoryGrid";
-import { CreatorPersonasSection } from "@/components/home/CreatorPersonasSection";
-import { FeaturedCollectionStrip } from "@/components/home/FeaturedCollectionStrip";
-import { FeaturedDrop } from "@/components/home/FeaturedDrop";
-import { FullWidthPromo } from "@/components/home/FullWidthPromo";
-import { HeroBanner } from "@/components/home/HeroBanner";
-import { LaptopBagsSpotlight } from "@/components/home/LaptopBagsSpotlight";
-import { MemberBanner } from "@/components/home/MemberBanner";
-import { NewArrivalsSection } from "@/components/home/NewArrivalsSection";
-import { TrendingSection } from "@/components/home/TrendingSection";
-import { getHomepageData } from "@/lib/data/products";
-import { IMAGES, imgHero1600 } from "@/lib/images";
-import type { ProductListRow } from "@/lib/mappers/product";
-import { mapProductListRowToSummary } from "@/lib/mappers/product";
-import type { ProductSummary } from "@/types";
+import type { Category, Product, ProductImage, ProductVariant } from "@prisma/client";
+
+import { HomePageClient } from "@/components/home/HomePageClient";
+import type { SerializedFeaturedProduct } from "@/components/home/home-types";
+import { prisma } from "@/lib/prisma";
 
 export const revalidate = 3600;
 
+const SLUGS = [
+  "asus-rog-zephyrus-g16",
+  "macbook-pro-14-m3",
+  "lenovo-thinkpad-x1-carbon-gen12",
+  "asus-proart-studiobook-16",
+  "samsung-galaxy-book4-ultra",
+] as const;
+
+type ProductWithRelations = Product & {
+  images: ProductImage[];
+  variants: ProductVariant[];
+  category: Category | null;
+};
+
+function serializeProduct(p: ProductWithRelations): SerializedFeaturedProduct | null {
+  if (!p.variants.length) return null;
+  const prices = p.variants.map((v) => Number(v.price));
+  const minP = Math.min(...prices);
+  const compares = p.variants
+    .map((v) => (v.compareAtPrice != null ? Number(v.compareAtPrice) : null))
+    .filter((x): x is number => x != null);
+  const maxCompare = compares.length ? Math.max(...compares) : null;
+  const sortedImages = [...p.images].sort((a, b) => a.displayOrder - b.displayOrder);
+  const primary = sortedImages.find((i) => i.isPrimary) ?? sortedImages[0];
+  return {
+    slug: p.slug,
+    name: p.name,
+    description: p.description,
+    categoryName: p.category?.name ?? null,
+    imageUrl: primary?.url ?? null,
+    minPrice: minP.toFixed(2),
+    compareAtPrice: maxCompare != null ? maxCompare.toFixed(2) : null,
+  };
+}
+
 export default async function HomePage() {
-  let featuredRow: ProductListRow | undefined;
-  let newest: ProductSummary[] = [];
-  let trending: ProductSummary[] = [];
+  const featuredBySlug: Record<string, SerializedFeaturedProduct | null> = {};
+
   try {
-    const data = await getHomepageData();
-    featuredRow = data.featured[0] as ProductListRow;
-    newest = data.newArrivals.map(mapProductListRowToSummary);
-    trending = data.trending.map(mapProductListRowToSummary);
+    const products = await Promise.all(
+      SLUGS.map((slug) =>
+        prisma.product.findUnique({
+          where: { slug },
+          include: {
+            images: { orderBy: { displayOrder: "asc" } },
+            variants: { orderBy: { price: "asc" } },
+            category: true,
+          },
+        }),
+      ),
+    );
+    for (const p of products) {
+      if (p) featuredBySlug[p.slug] = serializeProduct(p);
+    }
   } catch {
-    /* DB unavailable */
+    for (const s of SLUGS) featuredBySlug[s] = null;
   }
 
-  return (
-    <>
-      <HeroBanner />
-      <FeaturedCollectionStrip />
-      <BrandStrip />
-      <FeaturedDrop row={featuredRow} />
-      <CategoryGrid />
-      <TrendingSection products={trending} />
-      <FullWidthPromo
-        imageSrc={imgHero1600(IMAGES.lifestyle.developer)}
-        headline="Engineered for the work you actually do"
-        sub="Laptops and gear tuned for gaming, design, and production."
-        primaryHref="/products?category=laptops"
-        primaryLabel="Shop Laptops"
-        secondaryHref="/products"
-        secondaryLabel="Explore All"
-        variant="center"
-      />
-      <LaptopBagsSpotlight />
-      <FullWidthPromo
-        imageSrc={imgHero1600(IMAGES.bags.lifestyle)}
-        headline="Protection that moves with you"
-        sub="Backpacks, sleeves, and cases from brands you trust."
-        primaryHref="/products?category=laptop-bags"
-        primaryLabel="Shop Bags"
-        variant="center"
-      />
-      <NewArrivalsSection products={newest} />
-      <CreatorPersonasSection />
-      <MemberBanner />
-    </>
-  );
+  return <HomePageClient featuredBySlug={featuredBySlug} />;
 }

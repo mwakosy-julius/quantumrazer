@@ -24,6 +24,11 @@ const nextConfig = {
         hostname: "source.unsplash.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "videos.pexels.com",
+        pathname: "/**",
+      },
     ],
   },
 };
