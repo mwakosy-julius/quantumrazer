@@ -7,18 +7,20 @@ import { useState } from "react";
 import { createOrderAction, createPaymentIntentAction } from "@/actions/order.actions";
 import { QuantumRazerLogo } from "@/components/brand/QuantumRazerLogo";
 import type { CheckoutCartLine } from "@/lib/data/cart";
+import {
+  formatMoney,
+  FREE_SHIPPING_MIN_SUBTOTAL,
+  SHIPPING_EXPRESS,
+  SHIPPING_NEXT_DAY,
+  shippingCostForMethod,
+  STORE_CURRENCY_STRIPE,
+  STORE_TAX_RATE,
+  stripeAmountFromTotal,
+} from "@/lib/currency";
 
 type ShipMethod = "standard" | "express" | "next_day";
 
-export function CheckoutClient({
-  lines,
-  subtotal,
-  tax,
-}: {
-  lines: CheckoutCartLine[];
-  subtotal: number;
-  tax: number;
-}) {
+export function CheckoutClient({ lines, subtotal }: { lines: CheckoutCartLine[]; subtotal: number }) {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [guestEmail, setGuestEmail] = useState("");
@@ -26,9 +28,9 @@ export function CheckoutClient({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const shippingCost =
-    shippingMethod === "standard" ? 0 : shippingMethod === "express" ? 9.99 : 14.99;
-  const total = Math.round((subtotal + shippingCost + tax) * 100) / 100;
+  const shippingCost = shippingCostForMethod(shippingMethod, subtotal);
+  const tax = Math.round(subtotal * STORE_TAX_RATE);
+  const total = Math.round(subtotal + shippingCost + tax);
 
   const email = session?.user?.email ?? guestEmail;
 
@@ -40,8 +42,10 @@ export function CheckoutClient({
     }
     setLoading(true);
     try {
-      const amountCents = Math.round(total * 100);
-      const pi = await createPaymentIntentAction({ amountCents, currency: "usd" });
+      const pi = await createPaymentIntentAction({
+        amount: stripeAmountFromTotal(total),
+        currency: STORE_CURRENCY_STRIPE,
+      });
       if (pi?.serverError) {
         setError(pi.serverError);
         setLoading(false);
@@ -60,10 +64,10 @@ export function CheckoutClient({
         lastName: "Customer",
         addressLine1: "1 Demo Street",
         addressLine2: undefined as string | undefined,
-        city: "Portland",
-        state: "OR",
-        postalCode: "97201",
-        country: "US",
+        city: "Dar es Salaam",
+        state: "Dar es Salaam",
+        postalCode: "11101",
+        country: "TZ",
         phone: undefined as string | undefined,
       };
 
@@ -133,9 +137,9 @@ export function CheckoutClient({
             <div className="mt-4 space-y-3">
               {(
                 [
-                  ["standard", "Standard — Free"],
-                  ["express", "Express — $9.99"],
-                  ["next_day", "Next day — $14.99"],
+                  ["standard", `Standard — free over ${formatMoney(FREE_SHIPPING_MIN_SUBTOTAL)}`],
+                  ["express", `Express — ${formatMoney(SHIPPING_EXPRESS)}`],
+                  ["next_day", `Next day — ${formatMoney(SHIPPING_NEXT_DAY)}`],
                 ] as const
               ).map(([id, label]) => (
                 <label
@@ -174,26 +178,26 @@ export function CheckoutClient({
                 <span className="truncate text-grey-500">
                   {l.productName} × {l.quantity}
                 </span>
-                <span>${l.lineTotal.toFixed(2)}</span>
+                <span>{formatMoney(l.lineTotal)}</span>
               </li>
             ))}
           </ul>
           <div className="mt-6 space-y-2 border-t border-grey-200 pt-6 text-[15px]">
             <div className="flex justify-between text-black">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>{formatMoney(subtotal)}</span>
             </div>
             <div className="flex justify-between text-black">
               <span>Shipping</span>
-              <span>${shippingCost.toFixed(2)}</span>
+              <span>{shippingCost === 0 ? "Free" : formatMoney(shippingCost)}</span>
             </div>
             <div className="flex justify-between text-grey-500">
-              <span>Tax</span>
-              <span>${tax.toFixed(2)}</span>
+              <span>Tax (VAT)</span>
+              <span>{formatMoney(tax)}</span>
             </div>
             <div className="flex justify-between border-t border-grey-200 pt-4 font-bold text-black">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              <span>{formatMoney(total)}</span>
             </div>
           </div>
         </aside>

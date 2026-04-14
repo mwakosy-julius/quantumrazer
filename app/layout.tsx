@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: { default: "Quantum Razer | Precision Tech for Creators", template: "%s | Quantum Razer" },
   description:
-    "Premium laptops, accessories, laptop bags, and gadgets for gamers, designers, producers and creators. Free shipping over $75.",
+    "Premium laptops, accessories, laptop bags, and gadgets for creators in Tanzania. Prices in TZS; free standard delivery on qualifying orders.",
   icons: {
     icon: [
       { url: "/favicon.png", type: "image/png", sizes: "32x32" },
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: "Quantum Razer",
     siteName: "Quantum Razer",
     description:
-      "Premium laptops, accessories, laptop bags, and gadgets for creatives. Free shipping over $75.",
+      "Premium laptops, accessories, laptop bags, and gadgets for creatives in Tanzania. Prices in TZS.",
     images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "Quantum Razer" }],
   },
 };

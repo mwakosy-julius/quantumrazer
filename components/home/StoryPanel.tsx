@@ -145,7 +145,7 @@ export function StoryPanel({ featuredProduct }: Props) {
                     className="text-[14px] font-normal text-[#111]"
                     style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
                   >
-                    From ${featuredProduct.minPrice}
+                    From {featuredProduct.minPrice}
                   </p>
                 </div>
                 <span className="text-[#111]" aria-hidden>

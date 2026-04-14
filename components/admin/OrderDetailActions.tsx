@@ -13,6 +13,7 @@ import {
   updateOrderStatusAction,
   updateOrderTrackingAction,
 } from "@/actions/admin.actions";
+import { formatMoney } from "@/lib/currency";
 
 const STATUSES = Object.values(OrderStatus);
 
@@ -146,7 +147,7 @@ export function OrderDetailActions({
                 <div>
                   <p className="font-medium text-[#111111]">{it.productName}</p>
                   <p className="text-[13px] text-[#6B7280]">
-                    Qty {it.quantity} · ${Number(it.unitPrice).toFixed(2)} each
+                    Qty {it.quantity} · {formatMoney(Number(it.unitPrice))} each
                   </p>
                 </div>
               </li>

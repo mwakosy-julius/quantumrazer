@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import { z } from "zod";
 
 import { auth } from "@/lib/auth";
+import { shippingCostForMethod, STORE_TAX_RATE } from "@/lib/currency";
 import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
 import { actionClient } from "@/lib/safe-action";
@@ -15,8 +16,9 @@ import { CheckoutSchema } from "@/lib/validations";
 const CART_COOKIE = "cart_session";
 
 const PaymentIntentSchema = z.object({
-  amountCents: z.number().int().positive(),
-  currency: z.string().default("usd"),
+  /** Whole currency units: TZS shillings (Stripe zero-decimal). */
+  amount: z.number().int().positive(),
+  currency: z.string().default("tzs"),
 });
 
 export const createPaymentIntentAction = actionClient(PaymentIntentSchema, async (parsedInput) => {
@@ -28,7 +30,7 @@ export const createPaymentIntentAction = actionClient(PaymentIntentSchema, async
     };
   }
   const intent = await stripe.paymentIntents.create({
-    amount: parsedInput.amountCents,
+    amount: parsedInput.amount,
     currency: parsedInput.currency,
     automatic_payment_methods: { enabled: true },
   });
@@ -67,10 +69,9 @@ export const createOrderAction = actionClient(CheckoutSchema, async (parsedInput
     0,
   );
 
-  const shippingCost =
-    parsedInput.shippingMethod === "standard" ? 0 : parsedInput.shippingMethod === "express" ? 9.99 : 14.99;
-  const tax = Math.round(subtotal * 0.08 * 100) / 100;
-  const total = Math.round((subtotal + shippingCost + tax) * 100) / 100;
+  const shippingCost = shippingCostForMethod(parsedInput.shippingMethod, subtotal);
+  const tax = Math.round(subtotal * STORE_TAX_RATE);
+  const total = Math.round(subtotal + shippingCost + tax);
 
   const stripe = getStripe();
   if (stripe) {

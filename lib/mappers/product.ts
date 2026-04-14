@@ -1,5 +1,6 @@
 import type { Gender as PrismaGender } from "@prisma/client";
 
+import { formatMoney } from "@/lib/currency";
 import type { ProductDetail, ProductImage, ProductSummary, ProductVariant } from "@/types";
 
 const genderToUi: Record<PrismaGender, ProductSummary["gender"]> = {
@@ -28,12 +29,12 @@ export type ProductListRow = {
 export function mapProductListRowToSummary(p: ProductListRow): ProductSummary {
   const prices = p.variants.map((v) => Number(v.price));
   const minPriceNum = prices.length ? Math.min(...prices) : null;
-  const min_price = minPriceNum != null ? minPriceNum.toFixed(2) : null;
+  const min_price = minPriceNum != null ? formatMoney(minPriceNum) : null;
 
   const validCompares = p.variants
     .map((v) => (v.compareAtPrice != null ? Number(v.compareAtPrice) : null))
     .filter((c): c is number => c != null && !Number.isNaN(c) && minPriceNum != null && c > minPriceNum);
-  const max_price = validCompares.length ? Math.max(...validCompares).toFixed(2) : null;
+  const max_price = validCompares.length ? formatMoney(Math.max(...validCompares)) : null;
 
   const ratings = p.reviews.map((r) => r.rating);
   const avg_rating = ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : null;

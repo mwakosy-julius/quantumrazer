@@ -2,7 +2,7 @@ import { CheckoutClient } from "@/components/checkout/CheckoutClient";
 import { getCheckoutCartSummary } from "@/lib/data/cart";
 
 export default async function CheckoutPage() {
-  const { lines, subtotal, tax, isEmpty } = await getCheckoutCartSummary();
+  const { lines, subtotal, isEmpty } = await getCheckoutCartSummary();
 
   if (isEmpty) {
     return (
@@ -13,5 +13,5 @@ export default async function CheckoutPage() {
     );
   }
 
-  return <CheckoutClient lines={lines} subtotal={subtotal} tax={tax} />;
+  return <CheckoutClient lines={lines} subtotal={subtotal} />;
 }

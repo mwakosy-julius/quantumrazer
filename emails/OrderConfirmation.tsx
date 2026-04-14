@@ -10,6 +10,8 @@ import {
 } from "@react-email/components";
 import type { Order, OrderItem } from "@prisma/client";
 
+import { formatMoney } from "@/lib/currency";
+
 type OrderWithItems = Order & { items: OrderItem[] };
 
 export function OrderConfirmation({ order }: { order: OrderWithItems }) {
@@ -24,11 +26,13 @@ export function OrderConfirmation({ order }: { order: OrderWithItems }) {
           <Section style={{ marginTop: "16px" }}>
             {order.items.map((item) => (
               <Text key={item.id} style={{ color: "#111", fontSize: "14px" }}>
-                {item.productName} — {item.size} × {item.quantity} — ${Number(item.totalPrice).toFixed(2)}
+                {item.productName} — {item.size} × {item.quantity} — {formatMoney(Number(item.totalPrice))}
               </Text>
             ))}
           </Section>
-          <Text style={{ marginTop: "24px", fontWeight: 600 }}>Total: ${Number(order.total).toFixed(2)}</Text>
+          <Text style={{ marginTop: "24px", fontWeight: 600 }}>
+            Total: {formatMoney(Number(order.total))}
+          </Text>
         </Container>
       </Body>
     </Html>

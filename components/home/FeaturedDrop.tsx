@@ -133,14 +133,14 @@ export function FeaturedDrop({ narrative, product }: Props) {
               className="text-[24px] font-bold line-through text-white/40"
               style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
             >
-              ${product.compareAtPrice}
+              {product.compareAtPrice}
             </span>
           )}
           <span
             className="text-[24px] font-bold text-white"
             style={{ fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
           >
-            {product ? `From $${product.minPrice}` : "See collection"}
+            {product ? `From ${product.minPrice}` : "See collection"}
           </span>
         </div>
 

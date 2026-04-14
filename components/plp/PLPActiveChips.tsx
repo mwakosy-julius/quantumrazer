@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import { formatMoney, PLP_PRICE_SLIDER_MAX } from "@/lib/currency";
 import type { ProductFilters } from "@/lib/validations";
 
 function buildHref(filters: ProductFilters, patch: Partial<ProductFilters>): string {
@@ -29,11 +30,20 @@ export function PLPActiveChips({ filters }: { filters: ProductFilters }) {
   if (filters.category) items.push({ label: filters.category, href: buildHref(filters, { category: undefined }) });
   if (filters.gender) items.push({ label: filters.gender, href: buildHref(filters, { gender: undefined }) });
   if (filters.q) items.push({ label: filters.q, href: buildHref(filters, { q: undefined }) });
-  if (filters.minPrice != null || filters.maxPrice != null)
+  if (filters.minPrice != null || filters.maxPrice != null) {
+    const lo = filters.minPrice ?? 0;
+    const hi = filters.maxPrice ?? PLP_PRICE_SLIDER_MAX;
+    const label =
+      filters.minPrice != null && filters.maxPrice != null
+        ? `${formatMoney(lo)} – ${formatMoney(hi)}`
+        : filters.minPrice != null
+          ? `From ${formatMoney(lo)}`
+          : `Up to ${formatMoney(hi)}`;
     items.push({
-      label: `Price`,
+      label,
       href: buildHref(filters, { minPrice: undefined, maxPrice: undefined }),
     });
+  }
 
   if (items.length === 0) return null;
 

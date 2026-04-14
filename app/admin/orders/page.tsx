@@ -2,11 +2,8 @@ import { OrderStatus } from "@prisma/client";
 import Link from "next/link";
 import type { Prisma } from "@prisma/client";
 
+import { formatMoney } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
-
-function money(n: number) {
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD" });
-}
 
 export default async function AdminOrdersPage({
   searchParams,
@@ -77,7 +74,7 @@ export default async function AdminOrdersPage({
       <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
         {[
           { label: "Orders Today", value: String(todayCount) },
-          { label: "Revenue Today", value: money(todayRevenue) },
+          { label: "Revenue Today", value: formatMoney(todayRevenue) },
           { label: "Pending Orders", value: String(pendingCount) },
         ].map((c) => (
           <div key={c.label} className="rounded-lg border border-[#E5E7EB] bg-white p-5">
@@ -140,7 +137,7 @@ export default async function AdminOrdersPage({
                 <td className="px-4 py-3">{o.createdAt.toLocaleString()}</td>
                 <td className="px-4 py-3">{o.user?.email ?? o.guestEmail ?? "—"}</td>
                 <td className="px-4 py-3">{o.items.length}</td>
-                <td className="px-4 py-3">{money(Number(o.total))}</td>
+                <td className="px-4 py-3">{formatMoney(Number(o.total))}</td>
                 <td className="px-4 py-3">{o.stripePaymentIntentId ? "Stripe" : "Test / pending"}</td>
                 <td className="px-4 py-3">{o.status}</td>
                 <td className="px-4 py-3">

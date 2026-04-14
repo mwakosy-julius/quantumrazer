@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 
 import { createProductAction, updateProductAction } from "@/actions/admin.actions";
 import { ProductCard } from "@/components/product/ProductCard";
+import { formatMoney } from "@/lib/currency";
 import { getAllImageLibraryUrls } from "@/lib/images";
 import type { ProductSummary } from "@/types";
 
@@ -144,9 +145,9 @@ export function ProductForm({
       is_featured: isFeatured,
       is_new: isNew,
       category_slug: categorySlug,
-      min_price: minP != null && !Number.isNaN(minP) ? minP.toFixed(2) : null,
+      min_price: minP != null && !Number.isNaN(minP) ? formatMoney(minP) : null,
       max_price:
-        maxP != null && minP != null && !Number.isNaN(maxP) && maxP > minP ? maxP.toFixed(2) : null,
+        maxP != null && minP != null && !Number.isNaN(maxP) && maxP > minP ? formatMoney(maxP) : null,
       primary_image_url: images[0]?.url ?? null,
       secondary_image_url: images[1]?.url ?? null,
       avg_rating: null,
@@ -321,32 +322,26 @@ export function ProductForm({
           </h2>
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className={labelClass}>Price ($) *</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[14px] text-[#6B7280]">$</span>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  className={`${inputClass} pl-7`}
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-              </div>
+              <label className={labelClass}>Price (TZS) *</label>
+              <input
+                type="number"
+                step="1000"
+                min="0"
+                className={inputClass}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
             </div>
             <div>
-              <label className={labelClass}>Compare At ($)</label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[14px] text-[#6B7280]">$</span>
-                <input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  className={`${inputClass} pl-7`}
-                  value={compareAt}
-                  onChange={(e) => setCompareAt(e.target.value)}
-                />
-              </div>
+              <label className={labelClass}>Compare at (TZS)</label>
+              <input
+                type="number"
+                step="1000"
+                min="0"
+                className={inputClass}
+                value={compareAt}
+                onChange={(e) => setCompareAt(e.target.value)}
+              />
               <p className="mt-1 text-[12px] text-[#6B7280]">Leave empty if not on sale</p>
             </div>
             <div className="md:col-span-2">

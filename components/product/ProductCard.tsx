@@ -141,11 +141,11 @@ export function ProductCard({ product }: { product: ProductSummary }) {
           <div className="flex flex-wrap items-center gap-2">
             {sale && product.max_price ? (
               <>
-                <span className="text-[15px] text-grey-500 line-through">${product.max_price}</span>
-                <span className="text-[15px] text-black">${product.min_price}</span>
+                <span className="text-[15px] text-grey-500 line-through">{product.max_price}</span>
+                <span className="text-[15px] text-black">{product.min_price}</span>
               </>
             ) : (
-              <span className="text-[15px] text-black">${product.min_price ?? "—"}</span>
+              <span className="text-[15px] text-black">{product.min_price ?? "—"}</span>
             )}
           </div>
         </Link>

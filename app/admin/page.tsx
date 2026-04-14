@@ -1,11 +1,8 @@
 import { OrderStatus } from "@prisma/client";
 import Link from "next/link";
 
+import { formatMoney } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
-
-function money(n: number) {
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD" });
-}
 
 function statusBadge(status: OrderStatus) {
   const map: Record<OrderStatus, { bg: string; text: string }> = {
@@ -84,7 +81,7 @@ export default async function AdminDashboardPage() {
         {[
           {
             label: "Total Revenue",
-            value: money(totalRevenue),
+            value: formatMoney(totalRevenue),
             change: "↑ 12% from last month",
             positive: true,
             icon: IconDollar,
@@ -173,7 +170,7 @@ export default async function AdminDashboardPage() {
                   </td>
                   <td className="px-4 py-3.5 text-[14px] text-[#111111]">{o.items.length}</td>
                   <td className="px-4 py-3.5 text-[14px] text-[#111111]">
-                    {money(Number(o.total))}
+                    {formatMoney(Number(o.total))}
                   </td>
                   <td className="px-4 py-3.5">{statusBadge(o.status)}</td>
                 </tr>

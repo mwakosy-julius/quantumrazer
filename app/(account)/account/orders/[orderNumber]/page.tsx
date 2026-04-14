@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
+import { formatMoney } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 
 type Props = { params: { orderNumber: string } };
@@ -33,22 +34,22 @@ export default async function OrderDetailPage({ params }: Props) {
             <span>
               {i.productName} × {i.quantity}
             </span>
-            <span>${Number(i.totalPrice).toFixed(2)}</span>
+            <span>{formatMoney(Number(i.totalPrice))}</span>
           </li>
         ))}
       </ul>
       <div className="mt-6 space-y-2 border-t border-grey-200 pt-6 text-[14px]">
         <div className="flex justify-between">
           <span>Subtotal</span>
-          <span>${Number(order.subtotal).toFixed(2)}</span>
+          <span>{formatMoney(Number(order.subtotal))}</span>
         </div>
         <div className="flex justify-between">
-          <span>Tax</span>
-          <span>${Number(order.tax).toFixed(2)}</span>
+          <span>VAT</span>
+          <span>{formatMoney(Number(order.tax))}</span>
         </div>
         <div className="flex justify-between font-bold">
           <span>Total</span>
-          <span>${Number(order.total).toFixed(2)}</span>
+          <span>{formatMoney(Number(order.total))}</span>
         </div>
       </div>
     </div>

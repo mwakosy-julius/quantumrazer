@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { getCartForDrawer, updateCartItemAction } from "@/actions/cart.actions";
+import { estimatedStandardShipping, formatMoney, STORE_TAX_RATE } from "@/lib/currency";
 import { useCartStore } from "@/store/cartStore";
 
 type DrawerLine = {
@@ -35,7 +36,7 @@ function mapRows(rows: Awaited<ReturnType<typeof getCartForDrawer>>): DrawerLine
       colorName: row.variant.colorName,
       size: row.variant.size,
       unitPrice: unit,
-      lineTotal: Math.round(unit * qty * 100) / 100,
+      lineTotal: Math.round(unit * qty),
       imageUrl: row.variant.product.images[0]?.url ?? null,
     };
   });
@@ -61,9 +62,9 @@ export function CartDrawer() {
   };
 
   const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
-  const shipping = subtotal > 0 ? (subtotal >= 75 ? 0 : 9.99) : 0;
-  const tax = Math.round(subtotal * 0.08 * 100) / 100;
-  const total = Math.round((subtotal + shipping + tax) * 100) / 100;
+  const shipping = subtotal > 0 ? estimatedStandardShipping(subtotal) : 0;
+  const tax = Math.round(subtotal * STORE_TAX_RATE);
+  const total = Math.round(subtotal + shipping + tax);
   const itemCount = lines.reduce((s, l) => s + l.quantity, 0);
 
   const updateQty = async (itemId: string, quantity: number) => {
@@ -143,7 +144,7 @@ export function CartDrawer() {
                               +
                             </button>
                           </div>
-                          <span className="text-[15px] text-black">${item.unitPrice.toFixed(2)}</span>
+                          <span className="text-[15px] text-black">{formatMoney(item.unitPrice)}</span>
                         </div>
                         <button
                           type="button"
@@ -162,19 +163,19 @@ export function CartDrawer() {
               <div className="space-y-2 text-[15px]">
                 <div className="flex justify-between text-black">
                   <span>Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span>{formatMoney(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-black">
                   <span>Delivery</span>
-                  <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+                  <span>{shipping === 0 ? "Free" : formatMoney(shipping)}</span>
                 </div>
                 <div className="flex justify-between text-black">
-                  <span>Tax</span>
-                  <span>${tax.toFixed(2)}</span>
+                  <span>Tax (VAT)</span>
+                  <span>{formatMoney(tax)}</span>
                 </div>
                 <div className="mt-4 flex justify-between border-t border-grey-200 pt-4">
                   <span className="text-[18px] font-bold text-black">Total</span>
-                  <span className="text-[18px] font-bold text-black">${total.toFixed(2)}</span>
+                  <span className="text-[18px] font-bold text-black">{formatMoney(total)}</span>
                 </div>
               </div>
               <p className="mt-3 text-center text-[13px] text-grey-500">Member: Free Delivery on qualifying orders</p>

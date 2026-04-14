@@ -1,20 +1,25 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-const messages = [
-  "Free Delivery & Returns on Orders Over $75",
-  "New Drop: Creator Series Laptops — Shop Now",
-  "Next Day Delivery Available on Gaming Rigs",
-  "Members Get Early Access to Every Drop",
-  "Free Laptop Bag With Every Laptop Purchase",
-];
+import { formatMoney, FREE_SHIPPING_MIN_SUBTOTAL } from "@/lib/currency";
 
 const STORAGE_KEY = "qr_announce_dismissed";
 
 const ease = "cubic-bezier(0.4, 0, 0.2, 1)";
 
 export function AnnouncementBar() {
+  const messages = useMemo(
+    () => [
+      `Free delivery on orders over ${formatMoney(FREE_SHIPPING_MIN_SUBTOTAL)} — Tanzania`,
+      "New drop: creator laptops — shop now",
+      "Express delivery available on gaming rigs (Dar & major cities)",
+      "Members get early access to every drop",
+      "Free laptop bag with every laptop purchase",
+    ],
+    [],
+  );
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState<number | null>(null);
   const [slideActive, setSlideActive] = useState(false);

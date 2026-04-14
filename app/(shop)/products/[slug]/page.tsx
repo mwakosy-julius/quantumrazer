@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ProductDetailClient } from "@/components/product/ProductDetailClient";
+import { STORE_CURRENCY } from "@/lib/currency";
 import { getProductBySlug } from "@/lib/data/products";
 import { mapPrismaProductToDetail } from "@/lib/mappers/product";
 
@@ -42,8 +43,8 @@ export default async function ProductPage({ params }: Props) {
     brand: { "@type": "Brand", name: detail.brand },
     offers: {
       "@type": "Offer",
-      priceCurrency: "USD",
-      price: detail.variants[0]?.price,
+      priceCurrency: STORE_CURRENCY,
+      price: detail.variants[0] ? Number(detail.variants[0].price) : undefined,
       availability: "https://schema.org/InStock",
     },
     ...(detail.avg_rating && detail.review_count > 0

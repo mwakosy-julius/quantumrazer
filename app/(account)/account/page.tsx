@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
+import { formatMoney } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 
 const statusBadge = "rounded-brand bg-black px-2.5 py-1 text-[13px] font-medium uppercase text-white";
@@ -46,7 +47,7 @@ export default async function AccountPage() {
                     <td className="py-3">
                       <span className={statusBadge}>{key}</span>
                     </td>
-                    <td className="py-3 text-right">${Number(o.total).toFixed(2)}</td>
+                    <td className="py-3 text-right">{formatMoney(Number(o.total))}</td>
                   </tr>
                 );
               })}

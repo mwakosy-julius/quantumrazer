@@ -1,11 +1,8 @@
 import Link from "next/link";
 
 import { ToggleAdminButton } from "@/components/admin/ToggleAdminButton";
+import { formatMoney } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
-
-function money(n: number) {
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD" });
-}
 
 export default async function AdminCustomersPage() {
   const users = await prisma.user.findMany({
@@ -71,7 +68,7 @@ export default async function AdminCustomersPage() {
                   </td>
                   <td className="px-4 py-3">{u.email}</td>
                   <td className="px-4 py-3">{u._count.orders}</td>
-                  <td className="px-4 py-3">{money(u.spent)}</td>
+                  <td className="px-4 py-3">{formatMoney(u.spent)}</td>
                   <td className="px-4 py-3">{u.createdAt.toLocaleDateString()}</td>
                   <td className="px-4 py-3">
                     <Link

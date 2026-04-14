@@ -1,11 +1,8 @@
 import { notFound } from "next/navigation";
 
 import { OrderDetailActions } from "@/components/admin/OrderDetailActions";
+import { formatMoney } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
-
-function money(n: number) {
-  return n.toLocaleString("en-US", { style: "currency", currency: "USD" });
-}
 
 export default async function AdminOrderDetailPage({ params }: { params: { orderNumber: string } }) {
   const order = await prisma.order.findUnique({
@@ -58,15 +55,15 @@ export default async function AdminOrderDetailPage({ params }: { params: { order
           <dl className="mt-3 space-y-1 text-[14px]">
             <div className="flex justify-between">
               <dt className="text-[#6B7280]">Subtotal</dt>
-              <dd>{money(Number(order.subtotal))}</dd>
+              <dd>{formatMoney(Number(order.subtotal))}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-[#6B7280]">Tax</dt>
-              <dd>{money(Number(order.tax))}</dd>
+              <dt className="text-[#6B7280]">VAT</dt>
+              <dd>{formatMoney(Number(order.tax))}</dd>
             </div>
             <div className="flex justify-between font-semibold">
               <dt>Total</dt>
-              <dd>{money(Number(order.total))}</dd>
+              <dd>{formatMoney(Number(order.total))}</dd>
             </div>
           </dl>
           <h3 className="mt-4 text-[14px] font-semibold">Timeline</h3>

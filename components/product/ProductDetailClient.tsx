@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { StarRating } from "@/components/ui/StarRating";
+import { formatMoney, FREE_SHIPPING_MIN_SUBTOTAL } from "@/lib/currency";
 import type { ProductDetail } from "@/types";
 
 export function ProductDetailClient({ product }: { product: ProductDetail }) {
@@ -135,11 +136,19 @@ export function ProductDetailClient({ product }: { product: ProductDetail }) {
           <div className="mt-5 text-[24px] font-normal text-black">
             {sale && selectedVariant ? (
               <>
-                <span className="text-grey-500 line-through">${selectedVariant.compare_at_price}</span>
-                <span className="ml-2">${selectedVariant.price}</span>
+                <span className="text-grey-500 line-through">
+                  {formatMoney(Number(selectedVariant.compare_at_price))}
+                </span>
+                <span className="ml-2">{formatMoney(Number(selectedVariant.price))}</span>
               </>
             ) : (
-              <span>{selectedVariant ? `$${selectedVariant.price}` : `From $${product.variants[0]?.price ?? "—"}`}</span>
+              <span>
+                {selectedVariant
+                  ? formatMoney(Number(selectedVariant.price))
+                  : product.variants[0]?.price != null
+                    ? `From ${formatMoney(Number(product.variants[0].price))}`
+                    : "—"}
+              </span>
             )}
           </div>
 
@@ -241,7 +250,7 @@ export function ProductDetailClient({ product }: { product: ProductDetail }) {
               <circle cx="7.5" cy="18" r="1" fill="currentColor" />
               <circle cx="16.5" cy="18" r="1" fill="currentColor" />
             </svg>
-            Free delivery on orders over $75
+            Free delivery on orders over {formatMoney(FREE_SHIPPING_MIN_SUBTOTAL)}
           </p>
 
           <Accordion.Root type="multiple" className="mt-8 border-t border-grey-200">
@@ -249,7 +258,11 @@ export function ProductDetailClient({ product }: { product: ProductDetail }) {
               { id: "about", title: "Product Details", body: product.description ?? "Engineered for long sessions and heavy workflows." },
               { id: "box", title: "What's In The Box", body: "Device, power adapter, quick-start guide, compliance docs." },
               { id: "specs", title: "Full Specifications", body: "Full technical sheet available after purchase and in packaging QR." },
-              { id: "ship", title: "Delivery and Returns", body: "Free standard shipping over $75. Returns within 30 days in original condition." },
+              {
+                id: "ship",
+                title: "Delivery and Returns",
+                body: `Free standard shipping on orders over ${formatMoney(FREE_SHIPPING_MIN_SUBTOTAL)} across Tanzania. Returns within 30 days in original condition.`,
+              },
             ].map((item) => (
               <Accordion.Item key={item.id} value={item.id} className="border-b border-grey-200">
                 <Accordion.Header>

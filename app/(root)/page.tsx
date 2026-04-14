@@ -2,6 +2,7 @@ import type { Category, Product, ProductImage, ProductVariant } from "@prisma/cl
 
 import { HomePageClient } from "@/components/home/HomePageClient";
 import type { SerializedFeaturedProduct } from "@/components/home/home-types";
+import { formatMoney } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 
 export const revalidate = 3600;
@@ -36,8 +37,8 @@ function serializeProduct(p: ProductWithRelations): SerializedFeaturedProduct | 
     description: p.description,
     categoryName: p.category?.name ?? null,
     imageUrl: primary?.url ?? null,
-    minPrice: minP.toFixed(2),
-    compareAtPrice: maxCompare != null ? maxCompare.toFixed(2) : null,
+    minPrice: formatMoney(minP),
+    compareAtPrice: maxCompare != null ? formatMoney(maxCompare) : null,
   };
 }
 

@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 
 import { ProductsAdminClient, type AdminProductRow } from "@/components/admin/ProductsAdminClient";
+import { formatMoney } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 
 export default async function AdminProductsPage({
@@ -49,7 +50,7 @@ export default async function AdminProductsPage({
       slug: p.slug,
       categoryLabel: p.category?.name ?? "—",
       primaryImage: p.images[0]?.url ?? null,
-      priceLabel: minP.toLocaleString("en-US", { style: "currency", currency: "USD" }),
+      priceLabel: formatMoney(minP),
       stock,
       isActive: p.isActive,
       isFeatured: p.isFeatured,

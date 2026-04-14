@@ -8,6 +8,7 @@ import { useState } from "react";
 import { updateCartItemAction } from "@/actions/cart.actions";
 import { Button } from "@/components/ui/Button";
 import type { CheckoutCartLine } from "@/lib/data/cart";
+import { formatMoney, STORE_TAX_RATE } from "@/lib/currency";
 
 export function CartPageClient({
   initialLines,
@@ -21,7 +22,7 @@ export function CartPageClient({
   const router = useRouter();
   const [lines, setLines] = useState(initialLines);
 
-  const total = Math.round((subtotal + tax) * 100) / 100;
+  const total = Math.round(subtotal + tax);
 
   const refresh = () => router.refresh();
 
@@ -36,7 +37,7 @@ export function CartPageClient({
               ? {
                   ...l,
                   quantity,
-                  lineTotal: Math.round(l.unitPrice * quantity * 100) / 100,
+                  lineTotal: Math.round(l.unitPrice * quantity),
                 }
               : l,
           ),
@@ -81,7 +82,7 @@ export function CartPageClient({
                 </button>
               </div>
             </div>
-            <p className="text-[15px]">${item.lineTotal.toFixed(2)}</p>
+            <p className="text-[15px]">{formatMoney(item.lineTotal)}</p>
           </li>
         ))}
       </ul>
@@ -89,15 +90,15 @@ export function CartPageClient({
         <div className="space-y-2 text-[14px]">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>{formatMoney(subtotal)}</span>
           </div>
           <div className="flex justify-between text-grey-500">
-            <span>Est. Tax</span>
-            <span>${tax.toFixed(2)}</span>
+            <span>Est. VAT ({Math.round(STORE_TAX_RATE * 100)}%)</span>
+            <span>{formatMoney(tax)}</span>
           </div>
           <div className="flex justify-between border-t border-grey-200 pt-4 font-bold">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>{formatMoney(total)}</span>
           </div>
         </div>
         <Link href="/checkout" className="mt-6 block">

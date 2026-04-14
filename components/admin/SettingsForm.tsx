@@ -4,6 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import { saveSiteSettingsAction } from "@/actions/admin.actions";
+import { FREE_SHIPPING_MIN_SUBTOTAL, STORE_CURRENCY } from "@/lib/currency";
 
 const inputClass =
   "mt-1 h-10 w-full max-w-md rounded-md border border-[#E5E7EB] px-3 text-[14px] outline-none focus:border-[#111111]";
@@ -21,8 +22,8 @@ export function SettingsForm() {
         const r = await saveSiteSettingsAction({
           storeName: String(fd.get("storeName") ?? ""),
           contactEmail: String(fd.get("contactEmail") ?? ""),
-          currency: String(fd.get("currency") ?? "USD"),
-          freeShippingThreshold: Number(fd.get("freeShippingThreshold") ?? 75),
+          currency: String(fd.get("currency") ?? STORE_CURRENCY),
+          freeShippingThreshold: Number(fd.get("freeShippingThreshold") ?? FREE_SHIPPING_MIN_SUBTOTAL),
           notifyNewOrder: fd.get("notifyNewOrder") === "on",
           notifyLowStock: fd.get("notifyLowStock") === "on",
           lowStockThreshold: Number(fd.get("lowStockThreshold") ?? 5),
@@ -45,11 +46,16 @@ export function SettingsForm() {
           </label>
           <label className="block text-[13px] font-medium text-[#374151]">
             Currency
-            <input name="currency" className={inputClass} defaultValue="USD" />
+            <input name="currency" className={inputClass} defaultValue={STORE_CURRENCY} />
           </label>
           <label className="block text-[13px] font-medium text-[#374151]">
-            Free shipping threshold ($)
-            <input name="freeShippingThreshold" type="number" className={inputClass} defaultValue={75} />
+            Free shipping threshold (TZS)
+            <input
+              name="freeShippingThreshold"
+              type="number"
+              className={inputClass}
+              defaultValue={FREE_SHIPPING_MIN_SUBTOTAL}
+            />
           </label>
         </div>
       </section>

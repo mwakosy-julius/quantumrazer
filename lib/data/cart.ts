@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
 import { auth } from "@/lib/auth";
+import { STORE_TAX_RATE } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 
 const CART_COOKIE = "cart_session";
@@ -89,7 +90,7 @@ export function mapCartRowsToLines(rows: CartItemDetailed[]): CheckoutCartLine[]
       colorName: row.variant.colorName,
       size: row.variant.size,
       unitPrice: unit,
-      lineTotal: Math.round(unit * qty * 100) / 100,
+      lineTotal: Math.round(unit * qty),
       imageUrl: row.variant.product.images[0]?.url ?? null,
     };
   });
@@ -109,9 +110,9 @@ export async function getCheckoutCartSummary(): Promise<{
 
   const lines = mapCartRowsToLines(items);
 
-  const subtotal = Math.round(lines.reduce((s, l) => s + l.lineTotal, 0) * 100) / 100;
-  const tax = Math.round(subtotal * 0.08 * 100) / 100;
-  const total = Math.round((subtotal + tax) * 100) / 100;
+  const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
+  const tax = Math.round(subtotal * STORE_TAX_RATE);
+  const total = subtotal + tax;
 
   return { lines, subtotal, tax, total, isEmpty: false };
 }
