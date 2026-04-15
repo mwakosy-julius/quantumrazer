@@ -2,6 +2,7 @@ import { Gender, OrderStatus, PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { IMAGES, imgPdp } from "../lib/images";
+import { seedTwelveTshProducts } from "./seed-tsh-products";
 
 const prisma = new PrismaClient();
 
@@ -752,6 +753,7 @@ async function main() {
         categoryId: categoryBySlug[p.categorySlug],
         collectionId,
         brand: p.brand,
+        currency: "TZS",
         gender: p.gender,
         sport: p.sport ?? null,
         isFeatured: p.isFeatured ?? false,
@@ -788,6 +790,8 @@ async function main() {
       order += 1;
     }
   }
+
+  await seedTwelveTshProducts(prisma, categoryBySlug);
 
   const adminHash = await bcrypt.hash("QuantumAdmin2025!", 12);
   const userHash = await bcrypt.hash("Password123", 12);

@@ -32,6 +32,26 @@ export function formatMoney(amount: number): string {
   }).format(rounded);
 }
 
+/**
+ * Per-product display: TSh (Tanzanian shilling, written form), TZS (Intl), or USD.
+ * Numeric `amount` is the major unit (whole shillings for TSH/TZS, dollars for USD).
+ */
+export function formatPrice(amount: number, currency: string = "USD"): string {
+  const c = (currency || "USD").toUpperCase();
+  if (c === "TSH") {
+    return `TSh ${Math.round(amount).toLocaleString("en-TZ")}`;
+  }
+  if (c === "TZS") {
+    return formatMoney(amount);
+  }
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+}
+
 /** Stripe PaymentIntent amount for the cart total (TZS, integer). */
 export function stripeAmountFromTotal(total: number): number {
   return Math.round(total);

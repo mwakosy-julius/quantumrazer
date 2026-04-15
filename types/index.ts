@@ -28,6 +28,10 @@ export interface ProductSummary {
   is_featured: boolean;
   is_new: boolean;
   category_slug: string | null;
+  /** ISO-ish code: USD, TZS, TSH */
+  currency: string;
+  /** True when a variant has compare-at above current min price */
+  is_on_sale: boolean;
   min_price: string | null;
   max_price: string | null;
   primary_image_url: string | null;
@@ -71,6 +75,7 @@ export interface ProductDetail {
   is_featured: boolean;
   is_new: boolean;
   category_slug: string | null;
+  currency: string;
   variants: ProductVariant[];
   images: ProductImage[];
   avg_rating: number | null;

@@ -8,7 +8,7 @@ import { useMemo, useState } from "react";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { StarRating } from "@/components/ui/StarRating";
-import { formatMoney, FREE_SHIPPING_MIN_SUBTOTAL } from "@/lib/currency";
+import { formatMoney, formatPrice, FREE_SHIPPING_MIN_SUBTOTAL } from "@/lib/currency";
 import type { ProductDetail } from "@/types";
 
 export function ProductDetailClient({ product }: { product: ProductDetail }) {
@@ -137,16 +137,16 @@ export function ProductDetailClient({ product }: { product: ProductDetail }) {
             {sale && selectedVariant ? (
               <>
                 <span className="text-grey-500 line-through">
-                  {formatMoney(Number(selectedVariant.compare_at_price))}
+                  {formatPrice(Number(selectedVariant.compare_at_price), product.currency)}
                 </span>
-                <span className="ml-2">{formatMoney(Number(selectedVariant.price))}</span>
+                <span className="ml-2">{formatPrice(Number(selectedVariant.price), product.currency)}</span>
               </>
             ) : (
               <span>
                 {selectedVariant
-                  ? formatMoney(Number(selectedVariant.price))
+                  ? formatPrice(Number(selectedVariant.price), product.currency)
                   : product.variants[0]?.price != null
-                    ? `From ${formatMoney(Number(product.variants[0].price))}`
+                    ? `From ${formatPrice(Number(product.variants[0].price), product.currency)}`
                     : "—"}
               </span>
             )}

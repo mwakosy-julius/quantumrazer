@@ -1,5 +1,11 @@
 export const IMAGES = {
   laptops: {
+    /** Lenovo ThinkPad — dark professional tone */
+    lenovoX1Yoga: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef",
+    /** HP business laptop silver */
+    hpElitebook: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed",
+    /** Microsoft Surface–style slim laptop */
+    microsoftSurface: "https://images.unsplash.com/photo-1611186871525-9b2c84b37b25",
     macbookPro: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
     macbookAir: "https://images.unsplash.com/photo-1611186871525-9b2c84b37b25",
     asusRog: "https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89",
@@ -11,6 +17,20 @@ export const IMAGES = {
     ultrabook: "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2",
   },
   accessories: {
+    /** Aluminium laptop stand — clean product shot */
+    laptopStand: "https://images.unsplash.com/photo-1593642634524-b40b5baae6bb",
+    /** Premium over-ear headphones on white */
+    headphonesBlack: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e",
+    /** Slim grey laptop sleeve */
+    laptopSleeve: "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3",
+    /** Compact Bluetooth / desktop speaker */
+    kisonliSpeaker: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1",
+    /** Wireless mouse — clean product */
+    wirelessMouse: "https://images.unsplash.com/photo-1615751072497-5f5169febe17",
+    /** USB flash drive */
+    flashDrive: "https://images.unsplash.com/photo-1616628188540-925618b98318",
+    /** Gaming / pro 27\" monitor */
+    asusTufMonitor: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf",
     keyboard: "https://images.unsplash.com/photo-1618384887929-16ec33fab9ef",
     gamingMouse: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46",
     mouse: "https://images.unsplash.com/photo-1615751072497-5f5169febe17",
@@ -23,6 +43,10 @@ export const IMAGES = {
     ssd: "https://images.unsplash.com/photo-1585771724684-38269d6639fd",
   },
   bags: {
+    /** Black technical backpack */
+    gearBackpack: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62",
+    /** Premium leather / quality backpack */
+    wesleyBackpack: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa",
     backpackBlack: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62",
     leatherBag: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa",
     sleeve: "https://images.unsplash.com/photo-1622560480605-d83c853bc5c3",

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
-import { formatMoney } from "@/lib/currency";
+import { formatMoney, formatPrice } from "@/lib/currency";
 import { prisma } from "@/lib/prisma";
 
 type Props = { params: { orderNumber: string } };
@@ -13,7 +13,13 @@ export default async function OrderDetailPage({ params }: Props) {
 
   const order = await prisma.order.findFirst({
     where: { orderNumber: params.orderNumber, userId: session.user.id },
-    include: { items: true },
+    include: {
+      items: {
+        include: {
+          variant: { include: { product: { select: { currency: true } } } },
+        },
+      },
+    },
   });
 
   if (!order) notFound();
@@ -34,7 +40,9 @@ export default async function OrderDetailPage({ params }: Props) {
             <span>
               {i.productName} × {i.quantity}
             </span>
-            <span>{formatMoney(Number(i.totalPrice))}</span>
+            <span>
+              {formatPrice(Number(i.totalPrice), i.variant.product.currency ?? "TZS")}
+            </span>
           </li>
         ))}
       </ul>

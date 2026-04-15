@@ -1,6 +1,6 @@
 import type { Gender as PrismaGender } from "@prisma/client";
 
-import { formatMoney } from "@/lib/currency";
+import { formatPrice } from "@/lib/currency";
 import type { ProductDetail, ProductImage, ProductSummary, ProductVariant } from "@/types";
 
 const genderToUi: Record<PrismaGender, ProductSummary["gender"]> = {
@@ -16,6 +16,7 @@ export type ProductListRow = {
   slug: string;
   description?: string | null;
   brand: string;
+  currency?: string;
   gender: PrismaGender;
   sport: string | null;
   isFeatured: boolean;
@@ -27,14 +28,17 @@ export type ProductListRow = {
 };
 
 export function mapProductListRowToSummary(p: ProductListRow): ProductSummary {
+  const cur = p.currency ?? "USD";
   const prices = p.variants.map((v) => Number(v.price));
   const minPriceNum = prices.length ? Math.min(...prices) : null;
-  const min_price = minPriceNum != null ? formatMoney(minPriceNum) : null;
+  const min_price = minPriceNum != null ? formatPrice(minPriceNum, cur) : null;
 
   const validCompares = p.variants
     .map((v) => (v.compareAtPrice != null ? Number(v.compareAtPrice) : null))
     .filter((c): c is number => c != null && !Number.isNaN(c) && minPriceNum != null && c > minPriceNum);
-  const max_price = validCompares.length ? formatMoney(Math.max(...validCompares)) : null;
+  const compareMaxNum = validCompares.length ? Math.max(...validCompares) : null;
+  const max_price = compareMaxNum != null ? formatPrice(compareMaxNum, cur) : null;
+  const is_on_sale = minPriceNum != null && compareMaxNum != null && compareMaxNum > minPriceNum;
 
   const ratings = p.reviews.map((r) => r.rating);
   const avg_rating = ratings.length ? ratings.reduce((a, b) => a + b, 0) / ratings.length : null;
@@ -59,6 +63,8 @@ export function mapProductListRowToSummary(p: ProductListRow): ProductSummary {
     is_featured: p.isFeatured,
     is_new: p.isNew,
     category_slug: p.category?.slug ?? null,
+    currency: cur,
+    is_on_sale,
     min_price,
     max_price,
     primary_image_url: p.images[0]?.url ?? null,
@@ -76,6 +82,7 @@ type DetailProduct = {
   slug: string;
   description: string | null;
   brand: string;
+  currency?: string;
   gender: PrismaGender;
   sport: string | null;
   isFeatured: boolean;
@@ -146,6 +153,7 @@ export function mapPrismaProductToDetail(
     is_featured: p.isFeatured,
     is_new: p.isNew,
     category_slug: p.category?.slug ?? null,
+    currency: p.currency ?? "USD",
     variants,
     images,
     avg_rating: reviewAvg,

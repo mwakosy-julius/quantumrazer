@@ -73,6 +73,7 @@ export type CheckoutCartLine = {
   unitPrice: number;
   lineTotal: number;
   imageUrl: string | null;
+  currency: string;
 };
 
 export type CartItemDetailed = Awaited<ReturnType<typeof getCartItemsDetailed>>[number];
@@ -92,6 +93,7 @@ export function mapCartRowsToLines(rows: CartItemDetailed[]): CheckoutCartLine[]
       unitPrice: unit,
       lineTotal: Math.round(unit * qty),
       imageUrl: row.variant.product.images[0]?.url ?? null,
+      currency: row.variant.product.currency ?? "TZS",
     };
   });
 }

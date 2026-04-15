@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 import { createProductAction, updateProductAction } from "@/actions/admin.actions";
 import { ProductCard } from "@/components/product/ProductCard";
-import { formatMoney } from "@/lib/currency";
+import { formatPrice } from "@/lib/currency";
 import { getAllImageLibraryUrls } from "@/lib/images";
 import type { ProductSummary } from "@/types";
 
@@ -135,6 +135,7 @@ export function ProductForm({
       KIDS: "kids",
       UNISEX: "unisex",
     };
+    const cur = "TZS";
     return {
       id: "preview",
       name: name || "Product name",
@@ -145,9 +146,11 @@ export function ProductForm({
       is_featured: isFeatured,
       is_new: isNew,
       category_slug: categorySlug,
-      min_price: minP != null && !Number.isNaN(minP) ? formatMoney(minP) : null,
+      currency: cur,
+      is_on_sale: maxP != null && minP != null && !Number.isNaN(maxP) && !Number.isNaN(minP) && maxP > minP,
+      min_price: minP != null && !Number.isNaN(minP) ? formatPrice(minP, cur) : null,
       max_price:
-        maxP != null && minP != null && !Number.isNaN(maxP) && maxP > minP ? formatMoney(maxP) : null,
+        maxP != null && minP != null && !Number.isNaN(maxP) && maxP > minP ? formatPrice(maxP, cur) : null,
       primary_image_url: images[0]?.url ?? null,
       secondary_image_url: images[1]?.url ?? null,
       avg_rating: null,

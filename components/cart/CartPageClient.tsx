@@ -8,7 +8,7 @@ import { useState } from "react";
 import { updateCartItemAction } from "@/actions/cart.actions";
 import { Button } from "@/components/ui/Button";
 import type { CheckoutCartLine } from "@/lib/data/cart";
-import { formatMoney, STORE_TAX_RATE } from "@/lib/currency";
+import { formatMoney, formatPrice, STORE_TAX_RATE } from "@/lib/currency";
 
 export function CartPageClient({
   initialLines,
@@ -82,7 +82,7 @@ export function CartPageClient({
                 </button>
               </div>
             </div>
-            <p className="text-[15px]">{formatMoney(item.lineTotal)}</p>
+            <p className="text-[15px]">{formatPrice(item.lineTotal, item.currency)}</p>
           </li>
         ))}
       </ul>

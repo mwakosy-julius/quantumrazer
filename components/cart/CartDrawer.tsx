@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { getCartForDrawer, updateCartItemAction } from "@/actions/cart.actions";
-import { estimatedStandardShipping, formatMoney, STORE_TAX_RATE } from "@/lib/currency";
+import { estimatedStandardShipping, formatMoney, formatPrice, STORE_TAX_RATE } from "@/lib/currency";
 import { useCartStore } from "@/store/cartStore";
 
 type DrawerLine = {
@@ -21,6 +21,7 @@ type DrawerLine = {
   unitPrice: number;
   lineTotal: number;
   imageUrl: string | null;
+  currency: string;
 };
 
 function mapRows(rows: Awaited<ReturnType<typeof getCartForDrawer>>): DrawerLine[] {
@@ -38,6 +39,7 @@ function mapRows(rows: Awaited<ReturnType<typeof getCartForDrawer>>): DrawerLine
       unitPrice: unit,
       lineTotal: Math.round(unit * qty),
       imageUrl: row.variant.product.images[0]?.url ?? null,
+      currency: row.variant.product.currency ?? "TZS",
     };
   });
 }
@@ -144,7 +146,7 @@ export function CartDrawer() {
                               +
                             </button>
                           </div>
-                          <span className="text-[15px] text-black">{formatMoney(item.unitPrice)}</span>
+                          <span className="text-[15px] text-black">{formatPrice(item.lineTotal, item.currency)}</span>
                         </div>
                         <button
                           type="button"

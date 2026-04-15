@@ -128,6 +128,8 @@ model Product {
   categoryId   String?
   collectionId String?
   brand        String   @default("Nike")
+  /// Display: USD | TZS (Intl shilling) | TSH (TSh prefix)
+  currency     String   @default("USD")
   gender       Gender
   sport        String?
   isFeatured   Boolean  @default(false)

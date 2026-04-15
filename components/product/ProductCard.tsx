@@ -27,10 +27,7 @@ export function ProductCard({ product }: { product: ProductSummary }) {
 
   const isBag = product.category_slug === "laptop-bags";
 
-  const sale =
-    product.min_price &&
-    product.max_price &&
-    parseFloat(product.max_price) > parseFloat(product.min_price);
+  const sale = product.is_on_sale;
 
   const onQuickAdd = async (e: React.MouseEvent) => {
     e.preventDefault();
