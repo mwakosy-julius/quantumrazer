@@ -13,6 +13,11 @@ import {
 
 const NARRATIVE_STORAGE_KEY = "qr_narrative_v2";
 
+import Link from "next/link";
+
+import { ProductGrid } from "@/components/product/ProductGrid";
+import type { ProductSummary } from "@/types";
+
 import { CategoryGrid } from "./CategoryGrid";
 import { FeaturedDrop } from "./FeaturedDrop";
 import type { SerializedFeaturedProduct } from "./home-types";
@@ -22,9 +27,10 @@ import { VideoHero } from "./VideoHero";
 
 type Props = {
   featuredBySlug: Record<string, SerializedFeaturedProduct | null>;
+  latestProducts?: ProductSummary[];
 };
 
-export function HomePageClient({ featuredBySlug }: Props) {
+export function HomePageClient({ featuredBySlug, latestProducts = [] }: Props) {
   const [narrativeId, setNarrativeId] = useState<NarrativeId>(NARRATIVE_ORDER[0]);
 
   useEffect(() => {
@@ -63,6 +69,17 @@ export function HomePageClient({ featuredBySlug }: Props) {
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
       <VideoHero narrativeId={narrativeId} onNarrativeChange={persist} />
+      {latestProducts.length > 0 && (
+        <section className="mx-auto max-w-content px-6 py-14 md:px-[var(--content-padding)]">
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <h2 className="text-[24px] font-bold text-black md:text-[28px]">Just In</h2>
+            <Link href="/products?sort=newest" className="shrink-0 text-[15px] text-black underline">
+              Shop all
+            </Link>
+          </div>
+          <ProductGrid products={latestProducts} />
+        </section>
+      )}
       <StoryPanel featuredProduct={featured} />
       <FeaturedDrop narrative={narrative} product={featured} />
       <CategoryGrid narrativeId={narrativeId} />

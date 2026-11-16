@@ -1,9 +1,11 @@
 import Link from "next/link";
 
 import { QuantumRazerLogo } from "@/components/brand/QuantumRazerLogo";
-import { BRAND } from "@/lib/constants";
+import { BRAND, CONTACT } from "@/lib/constants";
 
-const cols = [
+type FooterLink = { label: string; href: string; external?: boolean };
+
+const cols: { title: string; links: FooterLink[] }[] = [
   {
     title: "Shop",
     links: [
@@ -17,30 +19,26 @@ const cols = [
   {
     title: "Help",
     links: [
+      { label: "Help Centre", href: "/help" },
       { label: "Track Order", href: "/account" },
-      { label: "Returns", href: "#" },
-      { label: "Contact Us", href: "#" },
-      { label: "FAQ", href: "#" },
-      { label: "Warranty", href: "#" },
+      { label: "Delivery", href: "/help#delivery" },
+      { label: "Returns & Warranty", href: "/help#returns" },
+      { label: "FAQ", href: "/help#faq" },
+    ],
+  },
+  {
+    title: "Contact",
+    links: [
+      { label: `WhatsApp ${CONTACT.whatsappDisplay}`, href: CONTACT.whatsappUrl, external: true },
+      { label: `Instagram ${CONTACT.instagramHandle}`, href: CONTACT.instagramUrl, external: true },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "About Us", href: "#" },
-      { label: "Careers", href: "#" },
-      { label: "Blog", href: "#" },
-      { label: "Press", href: "#" },
       { label: "Creators", href: "/creators" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy", href: "#" },
-      { label: "Terms", href: "#" },
-      { label: "Cookies", href: "#" },
-      { label: "Security", href: "#" },
+      { label: "Join Us", href: "/register" },
+      { label: "Sign In", href: "/login" },
     ],
   },
 ];
@@ -56,12 +54,23 @@ export function Footer() {
               <ul className="space-y-2">
                 {c.links.map((l) => (
                   <li key={l.label}>
-                    <Link
-                      href={l.href}
-                      className="block py-1.5 text-[13px] text-[rgba(255,255,255,0.7)] transition-colors duration-150 hover:text-white"
-                    >
-                      {l.label}
-                    </Link>
+                    {l.external ? (
+                      <a
+                        href={l.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block py-1.5 text-[13px] text-[rgba(255,255,255,0.7)] transition-colors duration-150 hover:text-white"
+                      >
+                        {l.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={l.href}
+                        className="block py-1.5 text-[13px] text-[rgba(255,255,255,0.7)] transition-colors duration-150 hover:text-white"
+                      >
+                        {l.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -76,37 +85,34 @@ export function Footer() {
               <p className="max-w-xs text-center text-[13px] text-[rgba(255,255,255,0.7)] md:text-left">{BRAND.tagline}</p>
             </div>
             <p className="flex items-center gap-2 text-[13px] text-[rgba(255,255,255,0.7)]">
-              <span aria-hidden>🌐</span> United States
+              <span aria-hidden>🌐</span> Tanzania
             </p>
             <div className="flex gap-6 text-[13px] text-[rgba(255,255,255,0.7)]">
-              <Link href="#" className="transition-colors hover:text-white" aria-label="Instagram">
+              <a
+                href={CONTACT.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-white"
+              >
                 Instagram
-              </Link>
-              <Link href="#" className="transition-colors hover:text-white" aria-label="X">
-                X
-              </Link>
-              <Link href="#" className="transition-colors hover:text-white" aria-label="YouTube">
-                YouTube
-              </Link>
+              </a>
+              <a
+                href={CONTACT.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition-colors hover:text-white"
+              >
+                WhatsApp
+              </a>
             </div>
           </div>
           <div className="mt-8 flex flex-col items-center gap-3 border-t border-[rgba(255,255,255,0.15)] pt-6 text-center md:flex-row md:justify-between">
             <p className="text-[11px] tracking-[0.02em] text-[rgba(255,255,255,0.45)]">
-              © 2025 Quantum Razer, Inc. All Rights Reserved
+              © {new Date().getFullYear()} Quantum Razer. All Rights Reserved
             </p>
-            <div className="flex flex-wrap justify-center gap-4 text-[11px] text-[rgba(255,255,255,0.45)]">
-              <Link href="#" className="hover:text-white">
-                Privacy
-              </Link>
-              <span aria-hidden>·</span>
-              <Link href="#" className="hover:text-white">
-                Terms
-              </Link>
-              <span aria-hidden>·</span>
-              <Link href="#" className="hover:text-white">
-                Cookies
-              </Link>
-            </div>
+            <Link href="/help" className="text-[11px] text-[rgba(255,255,255,0.45)] hover:text-white">
+              Help Centre
+            </Link>
           </div>
         </div>
       </div>

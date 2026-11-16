@@ -5,6 +5,7 @@ import { CartDrawer } from "@/components/cart/CartDrawer";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
+import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { getCartItemCount } from "@/lib/data/cart";
 
 import { Providers } from "./providers";
@@ -49,6 +50,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <main className="min-h-[50vh]">{children}</main>
           <Footer />
           <CartDrawer />
+          <WhatsAppButton />
         </Providers>
       </body>
     </html>

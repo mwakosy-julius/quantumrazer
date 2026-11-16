@@ -8,6 +8,7 @@ import { useMemo, useState } from "react";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { StarRating } from "@/components/ui/StarRating";
+import { whatsappLink } from "@/lib/constants";
 import { formatMoney, formatPrice, FREE_SHIPPING_MIN_SUBTOTAL } from "@/lib/currency";
 import type { ProductDetail } from "@/types";
 
@@ -243,6 +244,15 @@ export function ProductDetailClient({ product }: { product: ProductDetail }) {
             </svg>
             Favourites
           </button>
+
+          <a
+            href={whatsappLink(`Hello Quantum Razer, I'm interested in the ${product.name}. Is it available?`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 flex h-[52px] w-full items-center justify-center gap-2 rounded-pill bg-[#25D366] text-[16px] font-medium text-black transition-opacity hover:opacity-90"
+          >
+            Ask about this on WhatsApp
+          </a>
 
           <p className="mt-4 flex items-center justify-center gap-2 text-[13px] text-grey-500">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="text-black" aria-hidden>

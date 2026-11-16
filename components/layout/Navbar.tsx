@@ -11,7 +11,7 @@ import { getSearchSuggestionsQuery } from "@/actions/search.actions";
 import { QuantumRazerLogo } from "@/components/brand/QuantumRazerLogo";
 import { MegaMenu } from "@/components/layout/MegaMenu";
 import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
-import { NAV_MAIN, type MegaMenuKey } from "@/lib/constants";
+import { CONTACT, NAV_MAIN, type MegaMenuKey } from "@/lib/constants";
 import { useCartStore } from "@/store/cartStore";
 
 function linkIsActive(pathname: string, searchParams: URLSearchParams, href: string): boolean {
@@ -95,6 +95,13 @@ export function Navbar({ initialCartCount }: { initialCartCount: number }) {
       if (debounce.current) clearTimeout(debounce.current);
     };
   }, [query]);
+
+  const submitSearch = (term: string) => {
+    const q = term.trim();
+    if (!q) return;
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+    setSearchOpen(false);
+  };
 
   const signOutClient = async () => {
     await logoutAction({});
@@ -204,10 +211,15 @@ export function Navbar({ initialCartCount }: { initialCartCount: number }) {
           </button>
 
           <div className="ml-1 hidden items-center gap-2 md:flex">
-            <Link href="#" className="text-[13px] text-black hover:underline">
-              Find a Store
-            </Link>
-            <Link href="#" className="text-[13px] text-black hover:underline">
+            <a
+              href={CONTACT.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[13px] text-black hover:underline"
+            >
+              WhatsApp
+            </a>
+            <Link href="/help" className="text-[13px] text-black hover:underline">
               Help
             </Link>
           </div>
@@ -264,7 +276,14 @@ export function Navbar({ initialCartCount }: { initialCartCount: number }) {
           searchOpen ? "max-h-[min(360px,70vh)]" : "max-h-0 border-b-0"
         }`}
       >
-        <div className="mx-auto flex max-w-content items-center gap-4 px-6 py-3">
+        <form
+          role="search"
+          className="mx-auto flex max-w-content items-center gap-4 px-6 py-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            submitSearch(query);
+          }}
+        >
           <svg width="24" height="24" viewBox="0 0 24 24" className="shrink-0 text-grey-500" fill="none" aria-hidden>
             <path
               d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Zm0-2a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11Z"
@@ -275,7 +294,9 @@ export function Navbar({ initialCartCount }: { initialCartCount: number }) {
           <input
             ref={searchInputRef}
             className="min-w-0 flex-1 border-0 bg-transparent text-[16px] text-black outline-none placeholder:text-grey-300"
-            placeholder="Search"
+            type="search"
+            enterKeyHint="search"
+            placeholder="Search laptops, brands, accessories"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Search products"
@@ -303,7 +324,7 @@ export function Navbar({ initialCartCount }: { initialCartCount: number }) {
               </svg>
             </button>
           )}
-        </div>
+        </form>
         {suggestions.length > 0 && searchOpen && (
           <ul className="mx-auto max-w-content border-t border-grey-200 bg-white px-6">
             {suggestions.slice(0, 6).map((s) => (
@@ -311,10 +332,7 @@ export function Navbar({ initialCartCount }: { initialCartCount: number }) {
                 <button
                   type="button"
                   className="block w-full px-0 py-3 text-left text-[15px] text-black hover:bg-grey-100"
-                  onClick={() => {
-                    router.push(`/search?q=${encodeURIComponent(s)}`);
-                    setSearchOpen(false);
-                  }}
+                  onClick={() => submitSearch(s)}
                 >
                   {s}
                 </button>

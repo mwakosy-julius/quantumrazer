@@ -4,6 +4,20 @@ export const BRAND = {
   subTagline: "Tech built for the ones who make things.",
 } as const;
 
+const WHATSAPP_DIGITS = "255687408191";
+
+export const CONTACT = {
+  whatsappDisplay: "+255 687 408 191",
+  whatsappUrl: `https://wa.me/${WHATSAPP_DIGITS}`,
+  instagramHandle: "@quantum_razer",
+  instagramUrl: "https://www.instagram.com/quantum_razer/",
+} as const;
+
+/** WhatsApp chat link with a pre-filled message. */
+export function whatsappLink(message?: string): string {
+  return message ? `${CONTACT.whatsappUrl}?text=${encodeURIComponent(message)}` : CONTACT.whatsappUrl;
+}
+
 export const TRUST_BRANDS = [
   "APPLE",
   "ASUS",

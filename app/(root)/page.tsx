@@ -3,7 +3,11 @@ import type { Category, Product, ProductImage, ProductVariant } from "@prisma/cl
 import { HomePageClient } from "@/components/home/HomePageClient";
 import type { SerializedFeaturedProduct } from "@/components/home/home-types";
 import { formatMoney } from "@/lib/currency";
+import { getProducts } from "@/lib/data/products";
+import { mapProductListRowToSummary } from "@/lib/mappers/product";
 import { prisma } from "@/lib/prisma";
+import { ProductFilterSchema } from "@/lib/validations";
+import type { ProductSummary } from "@/types";
 
 export const revalidate = 3600;
 
@@ -65,5 +69,14 @@ export default async function HomePage() {
     for (const s of SLUGS) featuredBySlug[s] = null;
   }
 
-  return <HomePageClient featuredBySlug={featuredBySlug} />;
+  let latest: ProductSummary[] = [];
+  try {
+    const filters = ProductFilterSchema.parse({ page: 1, limit: 8, sort: "newest" });
+    const { products } = await getProducts(filters);
+    latest = products.map(mapProductListRowToSummary);
+  } catch {
+    latest = [];
+  }
+
+  return <HomePageClient featuredBySlug={featuredBySlug} latestProducts={latest} />;
 }

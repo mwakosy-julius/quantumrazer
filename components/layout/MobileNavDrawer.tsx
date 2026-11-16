@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { QuantumRazerLogo } from "@/components/brand/QuantumRazerLogo";
-import { MEGA_BY_KEY, NAV_MAIN, type MegaMenuKey } from "@/lib/constants";
+import { CONTACT, MEGA_BY_KEY, NAV_MAIN, type MegaMenuKey } from "@/lib/constants";
 
 export function MobileNavDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [panel, setPanel] = useState<MegaMenuKey | "root">("root");
@@ -53,7 +53,24 @@ export function MobileNavDrawer({ open, onClose }: { open: boolean; onClose: () 
                     <span className="text-[18px] text-grey-300">›</span>
                   </button>
                 ))}
-                <div className="border-t border-grey-200 px-6 py-4">
+                <div className="border-b border-grey-200 px-6 py-4">
+                  <Link href="/account/wishlist" className="block py-2 text-[16px] text-black" onClick={onClose}>
+                    Wishlist
+                  </Link>
+                  <Link href="/help" className="block py-2 text-[16px] text-black" onClick={onClose}>
+                    Help
+                  </Link>
+                  <a
+                    href={CONTACT.whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block py-2 text-[16px] text-black"
+                    onClick={onClose}
+                  >
+                    Chat on WhatsApp
+                  </a>
+                </div>
+                <div className="px-6 py-4">
                   <Link href="/login" className="block py-2 text-[16px] text-black" onClick={onClose}>
                     Sign In
                   </Link>
