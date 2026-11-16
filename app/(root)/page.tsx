@@ -71,7 +71,7 @@ export default async function HomePage() {
 
   let latest: ProductSummary[] = [];
   try {
-    const filters = ProductFilterSchema.parse({ page: 1, limit: 8, sort: "newest" });
+    const filters = ProductFilterSchema.parse({ page: 1, limit: 12, sort: "newest" });
     const { products } = await getProducts(filters);
     latest = products.map(mapProductListRowToSummary);
   } catch {

@@ -15,7 +15,7 @@ const NARRATIVE_STORAGE_KEY = "qr_narrative_v2";
 
 import Link from "next/link";
 
-import { ProductGrid } from "@/components/product/ProductGrid";
+import { ProductRow } from "@/components/product/ProductRow";
 import type { ProductSummary } from "@/types";
 
 import { CategoryGrid } from "./CategoryGrid";
@@ -79,7 +79,7 @@ export function HomePageClient({ featuredBySlug, latestProducts = [] }: Props) {
               Shop all
             </Link>
           </div>
-          <ProductGrid products={latestProducts} />
+          <ProductRow products={latestProducts} label="Just In products" />
         </section>
       )}
       <StoryPanel featuredProduct={featured} />
