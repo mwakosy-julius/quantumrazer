@@ -52,12 +52,20 @@ export async function getProducts(filters: ProductFilters) {
     ...(filters.sport && { sport: { contains: filters.sport, mode: "insensitive" } }),
     ...(filters.isNew === true && { isNew: true }),
     ...(filters.isFeatured === true && { isFeatured: true }),
+    // Every word typed must match somewhere, so "lenovo gaming" narrows instead of failing.
     ...(filters.q && {
-      OR: [
-        { name: { contains: filters.q, mode: "insensitive" } },
-        { description: { contains: filters.q, mode: "insensitive" } },
-        { sport: { contains: filters.q, mode: "insensitive" } },
-      ],
+      AND: filters.q
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 6)
+        .map((word) => ({
+          OR: [
+            { name: { contains: word, mode: "insensitive" as const } },
+            { brand: { contains: word, mode: "insensitive" as const } },
+            { description: { contains: word, mode: "insensitive" as const } },
+            { sport: { contains: word, mode: "insensitive" as const } },
+          ],
+        })),
     }),
   };
 

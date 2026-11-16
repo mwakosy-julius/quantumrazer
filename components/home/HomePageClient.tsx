@@ -22,6 +22,7 @@ import { CategoryGrid } from "./CategoryGrid";
 import { FeaturedDrop } from "./FeaturedDrop";
 import type { SerializedFeaturedProduct } from "./home-types";
 import { MemberCTA } from "./MemberCTA";
+import { ProductFinder } from "./ProductFinder";
 import { StoryPanel } from "./StoryPanel";
 import { VideoHero } from "./VideoHero";
 
@@ -68,6 +69,7 @@ export function HomePageClient({ featuredBySlug, latestProducts = [] }: Props) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
+      <ProductFinder />
       <VideoHero narrativeId={narrativeId} onNarrativeChange={persist} />
       {latestProducts.length > 0 && (
         <section className="mx-auto max-w-content px-6 py-14 md:px-[var(--content-padding)]">
