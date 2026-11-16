@@ -1,3 +1,4 @@
+import { fixImageUrl } from "@/lib/images";
 import type { Gender as PrismaGender } from "@prisma/client";
 
 import { formatPrice } from "@/lib/currency";
@@ -67,8 +68,8 @@ export function mapProductListRowToSummary(p: ProductListRow): ProductSummary {
     is_on_sale,
     min_price,
     max_price,
-    primary_image_url: p.images[0]?.url ?? null,
-    secondary_image_url: p.images[1]?.url ?? null,
+    primary_image_url: fixImageUrl(p.images[0]?.url),
+    secondary_image_url: fixImageUrl(p.images[1]?.url),
     avg_rating,
     review_count: p.reviews.length,
     default_variant_id: cheapestId,
@@ -135,7 +136,7 @@ export function mapPrismaProductToDetail(
 
   const images: ProductImage[] = p.images.map((im) => ({
     id: im.id,
-    url: im.url,
+    url: fixImageUrl(im.url),
     alt_text: im.altText,
     display_order: im.displayOrder,
     is_primary: im.isPrimary,

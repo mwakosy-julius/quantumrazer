@@ -69,8 +69,8 @@ export function HomePageClient({ featuredBySlug, latestProducts = [] }: Props) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      <ProductFinder />
       <VideoHero narrativeId={narrativeId} onNarrativeChange={persist} />
+      <ProductFinder />
       {latestProducts.length > 0 && (
         <section className="mx-auto max-w-content px-6 py-14 md:px-[var(--content-padding)]">
           <div className="mb-8 flex items-end justify-between gap-4">

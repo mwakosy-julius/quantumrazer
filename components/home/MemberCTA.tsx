@@ -12,7 +12,7 @@ const fontBody = '"Helvetica Neue", Helvetica, Arial, sans-serif';
 
 export function MemberCTA() {
   const { ref, isVisible } = useScrollReveal(0.15);
-  const bg = imgHero1920(IMAGES.lifestyle.galleryHall);
+  const bg = imgHero1920(IMAGES.lifestyle.collab);
 
   return (
     <section

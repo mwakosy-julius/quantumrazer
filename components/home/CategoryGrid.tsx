@@ -23,12 +23,12 @@ const CARD_DEFS: Record<CategoryCardKey, Omit<CardDef, "key">> = {
   creator: {
     title: "CREATIVE LAPTOPS",
     shopHref: "/products?category=laptops&sport=content-creation",
-    image: imgHero1920(IMAGES.lifestyle.creativeWoman),
+    image: imgHero1920("https://images.unsplash.com/photo-1522199755839-a2bacb67c546"),
   },
   gaming: {
     title: "GAMING LAPTOPS",
     shopHref: "/products?category=laptops&sport=Gaming",
-    image: imgHero1920(IMAGES.laptops.gaming),
+    image: imgHero1920(IMAGES.laptops.macbookPro),
   },
   bags: {
     title: "LAPTOP BAGS",

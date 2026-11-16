@@ -304,7 +304,7 @@ export function Navbar({ initialCartCount }: { initialCartCount: number }) {
           {query ? (
             <button
               type="button"
-              className="shrink-0 text-grey-500 hover:text-black"
+              className="[&::-webkit-search-cancel-button]:hidden shrink-0 text-grey-500 hover:text-black"
               aria-label="Clear search"
               onClick={() => setQuery("")}
             >

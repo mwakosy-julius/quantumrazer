@@ -89,23 +89,31 @@ export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
       onMouseEnter={() => setHoverPause(true)}
       onMouseLeave={() => setHoverPause(false)}
     >
-      <div
-        className="absolute inset-0 z-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${narrative.heroPoster})` }}
-        aria-hidden
-      />
+      <AnimatePresence initial={false}>
+        <motion.div
+          key={narrativeId}
+          className="absolute inset-0 z-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${narrative.heroPoster})` }}
+          initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.08 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ opacity: { duration: 0.8, ease: "easeInOut" }, scale: { duration: 9, ease: "easeOut" } }}
+          aria-hidden
+        />
+      </AnimatePresence>
 
       {loadVideos &&
         NARRATIVE_ORDER.map((nid) => {
           const n = NARRATIVES[nid];
           const isActive = nid === narrativeId;
+          if (!n.heroVideo) return null;
           return (
             <video
               key={nid}
               ref={(el) => {
                 videoRefs.current[nid] = el;
               }}
-              className={`qr-hero-video absolute inset-0 z-0 h-full w-full object-cover object-center transition-opacity duration-[800ms] ease-in-out ${
+              className={`qr-hero-video absolute inset-0 z-[1] h-full w-full object-cover object-center transition-opacity duration-[800ms] ease-in-out ${
                 isActive ? "opacity-100" : "opacity-0"
               }`}
               src={n.heroVideo}
@@ -319,21 +327,30 @@ export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
         </span>
       </div>
 
-      <div className="absolute bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1.5 sm:bottom-3">
-        <div
-          className="animate-scroll-line h-10 w-px overflow-hidden bg-white/30"
+      <button
+        type="button"
+        aria-label="Scroll to search"
+        onClick={() =>
+          document
+            .getElementById("find")
+            ?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" })
+        }
+        className="absolute bottom-[max(0.75rem,env(safe-area-inset-bottom,0px))] left-1/2 z-10 flex min-h-[44px] -translate-x-1/2 cursor-pointer flex-col items-center gap-1.5 px-4 sm:bottom-3"
+      >
+        <span
+          className="animate-scroll-line block h-10 w-px overflow-hidden bg-white/30"
           style={{ animation: reducedMotion ? "none" : undefined }}
           aria-hidden
         >
-          <div className="h-full w-full bg-white/80" />
-        </div>
+          <span className="block h-full w-full bg-white/80" />
+        </span>
         <span
-          className="text-[9px] font-normal uppercase tracking-[0.14em] text-white/38 sm:text-[10px]"
+          className="text-[9px] font-normal uppercase tracking-[0.14em] text-white/60 sm:text-[10px]"
           style={{ fontFamily: heroSans }}
         >
-          Scroll
+          Scroll to search
         </span>
-      </div>
+      </button>
     </section>
   );
 }

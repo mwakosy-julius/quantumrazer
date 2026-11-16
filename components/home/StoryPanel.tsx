@@ -5,37 +5,15 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { VIDEOS } from "@/lib/videos";
 
 import type { SerializedFeaturedProduct } from "./home-types";
 
 const STORY_POSTER =
-  "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=960&q=80&fit=crop";
+  "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&q=80&fit=crop";
 
 type Props = {
   featuredProduct: SerializedFeaturedProduct | null;
 };
-
-function useSaveData(): boolean {
-  const [saveData, setSaveData] = useState(false);
-  useEffect(() => {
-    const nav = navigator as Navigator & { connection?: { saveData?: boolean } };
-    setSaveData(Boolean(nav.connection?.saveData));
-  }, []);
-  return saveData;
-}
-
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const fn = () => setReduced(mq.matches);
-    mq.addEventListener("change", fn);
-    return () => mq.removeEventListener("change", fn);
-  }, []);
-  return reduced;
-}
 
 function useCountUp(target: number, enabled: boolean, durationMs = 1000) {
   const [value, setValue] = useState(0);
@@ -58,9 +36,6 @@ function useCountUp(target: number, enabled: boolean, durationMs = 1000) {
 }
 
 export function StoryPanel({ featuredProduct }: Props) {
-  const saveData = useSaveData();
-  const reducedMotion = usePrefersReducedMotion();
-  const loadVideo = !saveData && !reducedMotion;
   const leftReveal = useScrollReveal(0.2);
   const rightReveal = useScrollReveal(0.2);
   const statsReveal = useScrollReveal(0.2);
@@ -78,27 +53,10 @@ export function StoryPanel({ featuredProduct }: Props) {
           className={`reveal-left relative min-h-[500px] overflow-hidden md:min-h-0 ${leftReveal.isVisible ? "visible" : ""}`}
         >
           <div
-            className="absolute inset-0 bg-cover bg-center md:hidden"
+            className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${STORY_POSTER})` }}
             aria-hidden
           />
-          {loadVideo && (
-            <video
-              className="qr-story-video absolute inset-0 z-0 h-full w-full object-cover"
-              src={VIDEOS.storyPanel}
-              poster={STORY_POSTER}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="none"
-              aria-hidden
-              onError={(e) => {
-                const el = e.currentTarget;
-                if (!el.src.includes("2278095")) el.src = VIDEOS.fallback;
-              }}
-            />
-          )}
           <div
             className="pointer-events-none absolute inset-0 z-[1]"
             style={{
