@@ -36,6 +36,29 @@ function usePrefersReducedMotion(): boolean {
   return reduced;
 }
 
+/** Counts from 0 up to `value` once, when the slide appears. */
+function CountUp({ value, decimals = 0, animate }: { value: number; decimals?: number; animate: boolean }) {
+  const [shown, setShown] = useState(animate ? 0 : value);
+
+  useEffect(() => {
+    if (!animate) {
+      setShown(value);
+      return;
+    }
+    let frame = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / 1400);
+      setShown(value * (1 - (1 - t) ** 3));
+      if (t < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [value, animate]);
+
+  return <>{shown.toFixed(decimals)}</>;
+}
+
 export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
   const saveData = useSaveData();
   const reducedMotion = usePrefersReducedMotion();
@@ -267,6 +290,29 @@ export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
           {narrative.subheadline}
         </motion.p>
 
+        {narrative.stats && (
+          <motion.dl
+            key={`stats-${narrativeId}`}
+            className="mt-5 grid max-w-[30rem] grid-cols-3 gap-x-4 border-t border-white/20 pt-4 sm:gap-x-10"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.85, duration: 0.5, ease: "easeOut" }}
+            style={{ fontFamily: heroSans }}
+          >
+            {narrative.stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col-reverse justify-end">
+                <dt className="mt-0.5 text-[10px] font-normal uppercase tracking-[0.08em] text-white/60 sm:text-[11px]">
+                  {stat.label}
+                </dt>
+                <dd className="text-[22px] font-bold tabular-nums leading-none text-white sm:text-[28px]">
+                  <CountUp value={stat.value} decimals={stat.decimals} animate={!reducedMotion} />
+                  {stat.suffix}
+                </dd>
+              </div>
+            ))}
+          </motion.dl>
+        )}
+
         <div className="mt-5 flex flex-row flex-wrap gap-2 sm:gap-3">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -298,7 +344,7 @@ export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
       </div>
 
       <div
-        className="absolute bottom-[max(5.5rem,env(safe-area-inset-bottom,0px))] right-[clamp(16px,4vw,48px)] z-10 flex items-center gap-2 sm:bottom-[max(4.5rem,env(safe-area-inset-bottom,0px))]"
+        className="absolute right-[clamp(16px,4vw,48px)] top-4 z-10 flex items-center gap-2 sm:bottom-[max(4.5rem,env(safe-area-inset-bottom,0px))] sm:top-auto"
         role="tablist"
         aria-label="Home themes"
       >

@@ -1,6 +1,6 @@
 import { VIDEOS } from "./videos";
 
-export type NarrativeId = "hoops" | "sound" | "office" | "studio" | "home";
+export type NarrativeId = "story" | "hoops" | "sound" | "office" | "studio" | "home";
 
 export interface Narrative {
   id: NarrativeId;
@@ -16,9 +16,39 @@ export interface Narrative {
   eyebrow: string;
   featuredSlug: string;
   accentWord: number;
+  /** Optional counters shown on the slide (they count up when it appears). */
+  stats?: NarrativeStat[];
+}
+
+export interface NarrativeStat {
+  value: number;
+  /** Digits after the decimal point, e.g. 1 for "4.9". */
+  decimals?: number;
+  suffix: string;
+  label: string;
 }
 
 export const NARRATIVES: Record<NarrativeId, Narrative> = {
+  story: {
+    id: "story",
+    heroVideo: null,
+    heroPoster: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1920&q=85&fit=crop",
+    headline: ["Quantum Razer.", "For your photos,", "shows & studies."],
+    subheadline:
+      "We help families, students and creators find laptops and gear that are easy to use and nice to look at, without the jargon.",
+    ctaPrimary: "Shop All Products",
+    ctaSecondary: "Contact Us",
+    ctaPrimaryHref: "/products",
+    ctaSecondaryHref: "/help",
+    eyebrow: "Our story",
+    featuredSlug: "asus-rog-zephyrus-g16",
+    accentWord: 0,
+    stats: [
+      { value: 30, suffix: "+", label: "Brands carried" },
+      { value: 4.9, decimals: 1, suffix: "★", label: "Average rating" },
+      { value: 48, suffix: "hr", label: "Express delivery" },
+    ],
+  },
   hoops: {
     id: "hoops",
     heroVideo: null,
@@ -91,7 +121,7 @@ export const NARRATIVES: Record<NarrativeId, Narrative> = {
   },
 };
 
-export const NARRATIVE_ORDER: NarrativeId[] = ["hoops", "sound", "office", "studio", "home"];
+export const NARRATIVE_ORDER: NarrativeId[] = ["story", "hoops", "sound", "office", "studio", "home"];
 
 export function getNextNarrative(current: NarrativeId | null): NarrativeId {
   if (!current) return NARRATIVE_ORDER[0];
@@ -107,6 +137,7 @@ export function isNarrativeId(value: string): value is NarrativeId {
 export type CategoryCardKey = "creator" | "gaming" | "bags" | "peripherals" | "gadgets";
 
 export const CATEGORY_ORDER_BY_NARRATIVE: Record<NarrativeId, CategoryCardKey[]> = {
+  story: ["creator", "gaming", "bags", "peripherals", "gadgets"],
   hoops: ["gaming", "creator", "peripherals", "bags", "gadgets"],
   sound: ["peripherals", "gadgets", "creator", "gaming", "bags"],
   office: ["bags", "peripherals", "creator", "gaming", "gadgets"],
