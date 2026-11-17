@@ -10,7 +10,7 @@ const AUTO_ADVANCE_MS = 3200;
 
 /**
  * One row of products that glides sideways by itself. The product in the
- * middle is in focus (full size); the ones beside it are smaller and faded.
+ * middle is in focus (full size); the ones beside it are smaller.
  * It pauses while the customer hovers, touches or tabs into it.
  */
 export function ProductRow({ products, label }: { products: ProductSummary[]; label: string }) {
@@ -122,8 +122,8 @@ export function ProductRow({ products, label }: { products: ProductSummary[]; la
               className="w-[62vw] shrink-0 snap-center px-2 sm:w-[260px] md:w-[300px] md:px-3"
             >
               <div
-                className={`origin-center transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${
-                  isActive ? "scale-100 opacity-100" : "scale-[0.82] opacity-45"
+                className={`origin-center transition-transform duration-500 ease-out motion-reduce:transition-none ${
+                  isActive ? "scale-100" : "scale-[0.82]"
                 }`}
               >
                 <ProductCard product={p} />
