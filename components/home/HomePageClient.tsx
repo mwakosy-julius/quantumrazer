@@ -6,7 +6,6 @@ import { useCallback, useEffect, useState } from "react";
 import {
   getNextNarrative,
   isNarrativeId,
-  NARRATIVES,
   NARRATIVE_ORDER,
   type NarrativeId,
 } from "@/lib/narratives";
@@ -19,19 +18,14 @@ import { ProductRow } from "@/components/product/ProductRow";
 import type { ProductSummary } from "@/types";
 
 import { CategoryGrid } from "./CategoryGrid";
-import { FeaturedDrop } from "./FeaturedDrop";
-import type { SerializedFeaturedProduct } from "./home-types";
-import { MemberCTA } from "./MemberCTA";
 import { ProductFinder } from "./ProductFinder";
-import { StoryPanel } from "./StoryPanel";
 import { VideoHero } from "./VideoHero";
 
 type Props = {
-  featuredBySlug: Record<string, SerializedFeaturedProduct | null>;
   latestProducts?: ProductSummary[];
 };
 
-export function HomePageClient({ featuredBySlug, latestProducts = [] }: Props) {
+export function HomePageClient({ latestProducts = [] }: Props) {
   const [narrativeId, setNarrativeId] = useState<NarrativeId>(NARRATIVE_ORDER[0]);
 
   useEffect(() => {
@@ -60,9 +54,6 @@ export function HomePageClient({ featuredBySlug, latestProducts = [] }: Props) {
     }
   }, []);
 
-  const narrative = NARRATIVES[narrativeId];
-  const featured = featuredBySlug[narrative.featuredSlug] ?? null;
-
   return (
     <motion.main
       initial={{ opacity: 0 }}
@@ -82,10 +73,7 @@ export function HomePageClient({ featuredBySlug, latestProducts = [] }: Props) {
           <ProductRow products={latestProducts} label="Just In products" />
         </section>
       )}
-      <StoryPanel featuredProduct={featured} />
-      <FeaturedDrop narrative={narrative} product={featured} />
       <CategoryGrid narrativeId={narrativeId} />
-      <MemberCTA />
     </motion.main>
   );
 }
