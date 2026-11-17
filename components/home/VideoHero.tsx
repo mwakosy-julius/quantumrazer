@@ -116,7 +116,7 @@ export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
         <motion.div
           key={narrativeId}
           className="absolute inset-0 z-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${narrative.heroPoster})` }}
+          style={{ backgroundImage: `url(${narrative.heroPoster})`, backgroundPosition: narrative.heroFocus }}
           initial={{ opacity: 0, scale: reducedMotion ? 1 : 1.08 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
@@ -139,6 +139,7 @@ export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
               className={`qr-hero-video absolute inset-0 z-[1] h-full w-full object-cover object-center transition-opacity duration-[800ms] ease-in-out ${
                 isActive ? "opacity-100" : "opacity-0"
               }`}
+              style={{ objectPosition: n.heroFocus }}
               src={n.heroVideo}
               poster={n.heroPoster}
               autoPlay={isActive}

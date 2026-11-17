@@ -7,6 +7,8 @@ export interface Narrative {
   /** Optional clip; themes without one show the photo with a slow zoom. */
   heroVideo: string | null;
   heroPoster: string;
+  /** Which part of the picture stays in view on narrow screens (CSS position). */
+  heroFocus?: string;
   headline: string[];
   subheadline: string;
   ctaPrimary: string;
@@ -52,7 +54,7 @@ export const NARRATIVES: Record<NarrativeId, Narrative> = {
   hoops: {
     id: "hoops",
     heroVideo: null,
-    heroPoster: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=1920&q=85&fit=crop",
+    heroPoster: "https://images.unsplash.com/photo-1630794180018-433d915c34ac?w=1920&q=85&fit=crop",
     headline: ["Game", "on.", "Anywhere."],
     subheadline: "Smooth motion, fast refresh rates, and the power to play anything, at your desk or on the couch.",
     ctaPrimary: "Shop Gaming Laptops",
@@ -65,8 +67,8 @@ export const NARRATIVES: Record<NarrativeId, Narrative> = {
   },
   sound: {
     id: "sound",
-    heroVideo: null,
-    heroPoster: "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=1920&q=85&fit=crop",
+    heroVideo: VIDEOS.heroSound,
+    heroPoster: "/hero/sound.jpg",
     headline: ["Turn it", "up.", "Feel it."],
     subheadline: "Recording, playlists, and calls — laptops that keep rhythm with your day.",
     ctaPrimary: "Shop Laptops",
@@ -80,7 +82,7 @@ export const NARRATIVES: Record<NarrativeId, Narrative> = {
   office: {
     id: "office",
     heroVideo: VIDEOS.heroOffice,
-    heroPoster: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1920&q=85&fit=crop",
+    heroPoster: "/hero/office.jpg",
     headline: ["Meetings.", "Deadlines.", "Done."],
     subheadline: "Reliable laptops for video calls, documents, and the work that actually pays the bills.",
     ctaPrimary: "Shop Work Laptops",
@@ -94,7 +96,7 @@ export const NARRATIVES: Record<NarrativeId, Narrative> = {
   studio: {
     id: "studio",
     heroVideo: null,
-    heroPoster: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1920&q=85&fit=crop",
+    heroPoster: "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?w=1920&q=85&fit=crop",
     headline: ["Create", "without", "waiting."],
     subheadline: "Color-accurate screens and speed for photo, video, and everything you publish.",
     ctaPrimary: "Shop Creative Laptops",
@@ -107,8 +109,9 @@ export const NARRATIVES: Record<NarrativeId, Narrative> = {
   },
   home: {
     id: "home",
-    heroVideo: null,
-    heroPoster: "https://images.unsplash.com/photo-1522199755839-a2bacb67c546?w=1920&q=85&fit=crop",
+    heroVideo: VIDEOS.heroHome,
+    heroPoster: "/hero/home.jpg",
+    heroFocus: "62% 50%",
     headline: ["Movies.", "Shows.", "Chill."],
     subheadline: "Big, clear screens for streaming, browsing, and lazy Sundays at home.",
     ctaPrimary: "Shop Entertainment Laptops",
