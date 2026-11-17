@@ -28,7 +28,7 @@ const CARD_DEFS: Record<CategoryCardKey, Omit<CardDef, "key">> = {
   gaming: {
     title: "GAMING LAPTOPS",
     shopHref: "/products?category=laptops&sport=Gaming",
-    image: imgHero1920(IMAGES.laptops.macbookPro),
+    image: imgHero1920(IMAGES.laptops.gaming),
   },
   bags: {
     title: "LAPTOP BAGS",

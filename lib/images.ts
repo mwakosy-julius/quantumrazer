@@ -11,7 +11,7 @@ export const IMAGES = {
     asusRog: "https://images.unsplash.com/photo-1603302576837-37561b2e2302",
     dellXps: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed",
     lenovo: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef",
-    gaming: "https://images.unsplash.com/photo-1593640408182-31c70c8268f5",
+    gaming: "https://images.unsplash.com/photo-1640955014216-75201056c829",
     openSide: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853",
     workspace: "https://images.unsplash.com/photo-1484788984921-03950022c9ef",
     ultrabook: "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2",
