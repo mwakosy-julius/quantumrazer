@@ -4,7 +4,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { getNextNarrative, NARRATIVES, NARRATIVE_ORDER, type NarrativeId } from "@/lib/narratives";
+import {
+  getNextNarrative,
+  NARRATIVES,
+  NARRATIVE_ORDER,
+  type NarrativeId,
+  type NarrativeStat,
+  type ReviewSummary,
+} from "@/lib/narratives";
 import { VIDEOS } from "@/lib/videos";
 
 const heroSans =
@@ -13,6 +20,7 @@ const heroSans =
 type Props = {
   narrativeId: NarrativeId;
   onNarrativeChange: (id: NarrativeId) => void;
+  reviewSummary?: ReviewSummary | null;
 };
 
 function useSaveData(): boolean {
@@ -59,7 +67,7 @@ function CountUp({ value, decimals = 0, animate }: { value: number; decimals?: n
   return <>{shown.toFixed(decimals)}</>;
 }
 
-export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
+export function VideoHero({ narrativeId, onNarrativeChange, reviewSummary }: Props) {
   const saveData = useSaveData();
   const reducedMotion = usePrefersReducedMotion();
   const loadVideos = !saveData && !reducedMotion;
@@ -101,6 +109,16 @@ export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
 
   const activeIndex = NARRATIVE_ORDER.indexOf(narrativeId);
   const narrative = NARRATIVES[narrativeId];
+
+  // The reviews slide shows the shop's real rating and review count when reviews exist.
+  let stats: NarrativeStat[] | undefined = narrative.stats;
+  if (narrativeId === "reviews" && reviewSummary && reviewSummary.count > 0) {
+    stats = [
+      { value: reviewSummary.average, decimals: 1, suffix: "★", label: "Average rating" },
+      { value: reviewSummary.count, suffix: "", label: reviewSummary.count === 1 ? "Customer review" : "Customer reviews" },
+      ...(narrative.stats ?? []).filter((stat) => stat.label === "Express delivery"),
+    ];
+  }
 
   return (
     <section
@@ -291,7 +309,7 @@ export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
           {narrative.subheadline}
         </motion.p>
 
-        {narrative.stats && (
+        {stats && (
           <motion.dl
             key={`stats-${narrativeId}`}
             className="mt-5 grid max-w-[30rem] grid-cols-3 gap-x-4 border-t border-white/20 pt-4 sm:gap-x-10"
@@ -300,7 +318,7 @@ export function VideoHero({ narrativeId, onNarrativeChange }: Props) {
             transition={{ delay: 0.85, duration: 0.5, ease: "easeOut" }}
             style={{ fontFamily: heroSans }}
           >
-            {narrative.stats.map((stat) => (
+            {stats.map((stat) => (
               <div key={stat.label} className="flex flex-col-reverse justify-end">
                 <dt className="mt-0.5 text-[10px] font-normal uppercase tracking-[0.08em] text-white/60 sm:text-[11px]">
                   {stat.label}

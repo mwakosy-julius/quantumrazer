@@ -8,6 +8,7 @@ import {
   isNarrativeId,
   NARRATIVE_ORDER,
   type NarrativeId,
+  type ReviewSummary,
 } from "@/lib/narratives";
 
 const NARRATIVE_STORAGE_KEY = "qr_narrative_v2";
@@ -23,9 +24,10 @@ import { VideoHero } from "./VideoHero";
 
 type Props = {
   latestProducts?: ProductSummary[];
+  reviewSummary?: ReviewSummary | null;
 };
 
-export function HomePageClient({ latestProducts = [] }: Props) {
+export function HomePageClient({ latestProducts = [], reviewSummary = null }: Props) {
   const [narrativeId, setNarrativeId] = useState<NarrativeId>(NARRATIVE_ORDER[0]);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ export function HomePageClient({ latestProducts = [] }: Props) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      <VideoHero narrativeId={narrativeId} onNarrativeChange={persist} />
+      <VideoHero narrativeId={narrativeId} onNarrativeChange={persist} reviewSummary={reviewSummary} />
       <ProductFinder />
       {latestProducts.length > 0 && (
         <section className="mx-auto max-w-content px-6 py-14 md:px-[var(--content-padding)]">

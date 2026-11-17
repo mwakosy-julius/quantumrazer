@@ -1,6 +1,6 @@
 import { VIDEOS } from "./videos";
 
-export type NarrativeId = "story" | "hoops" | "sound" | "office" | "studio" | "home";
+export type NarrativeId = "story" | "reviews" | "hoops" | "sound" | "office" | "studio" | "home";
 
 export interface Narrative {
   id: NarrativeId;
@@ -22,6 +22,12 @@ export interface Narrative {
   stats?: NarrativeStat[];
 }
 
+/** Real review figures from the database, when the shop has any reviews. */
+export interface ReviewSummary {
+  average: number;
+  count: number;
+}
+
 export interface NarrativeStat {
   value: number;
   /** Digits after the decimal point, e.g. 1 for "4.9". */
@@ -35,19 +41,33 @@ export const NARRATIVES: Record<NarrativeId, Narrative> = {
     id: "story",
     heroVideo: null,
     heroPoster: "https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1920&q=85&fit=crop",
-    headline: ["Quantum Razer.", "For your photos,", "shows & studies."],
+    headline: ["Quantum Razer.", "For", "students."],
     subheadline:
-      "We help families, students and creators find laptops and gear that are easy to use and nice to look at, without the jargon.",
-    ctaPrimary: "Shop All Products",
+      "Laptops and gear for lectures, assignments and late-night study, explained without the jargon.",
+    ctaPrimary: "Shop Student Laptops",
     ctaSecondary: "Contact Us",
-    ctaPrimaryHref: "/products",
+    ctaPrimaryHref: "/products?category=laptops",
     ctaSecondaryHref: "/help",
-    eyebrow: "Our story",
+    eyebrow: "For students",
+    featuredSlug: "asus-rog-zephyrus-g16",
+    accentWord: 0,
+  },
+  reviews: {
+    id: "reviews",
+    heroVideo: null,
+    heroPoster: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=85&fit=crop",
+    headline: ["Rated", "by our", "customers."],
+    subheadline: "Read what buyers say on every product page, then pick yours with confidence.",
+    ctaPrimary: "Shop Popular Products",
+    ctaSecondary: "See What's New",
+    ctaPrimaryHref: "/products?sort=popular",
+    ctaSecondaryHref: "/products?sort=newest",
+    eyebrow: "Reviews",
     featuredSlug: "asus-rog-zephyrus-g16",
     accentWord: 0,
     stats: [
-      { value: 30, suffix: "+", label: "Brands carried" },
       { value: 4.9, decimals: 1, suffix: "★", label: "Average rating" },
+      { value: 30, suffix: "+", label: "Brands carried" },
       { value: 48, suffix: "hr", label: "Express delivery" },
     ],
   },
@@ -124,7 +144,7 @@ export const NARRATIVES: Record<NarrativeId, Narrative> = {
   },
 };
 
-export const NARRATIVE_ORDER: NarrativeId[] = ["story", "hoops", "sound", "office", "studio", "home"];
+export const NARRATIVE_ORDER: NarrativeId[] = ["story", "reviews", "hoops", "sound", "office", "studio", "home"];
 
 export function getNextNarrative(current: NarrativeId | null): NarrativeId {
   if (!current) return NARRATIVE_ORDER[0];
@@ -141,6 +161,7 @@ export type CategoryCardKey = "creator" | "gaming" | "bags" | "peripherals" | "g
 
 export const CATEGORY_ORDER_BY_NARRATIVE: Record<NarrativeId, CategoryCardKey[]> = {
   story: ["creator", "gaming", "bags", "peripherals", "gadgets"],
+  reviews: ["creator", "gaming", "bags", "peripherals", "gadgets"],
   hoops: ["gaming", "creator", "peripherals", "bags", "gadgets"],
   sound: ["peripherals", "gadgets", "creator", "gaming", "bags"],
   office: ["bags", "peripherals", "creator", "gaming", "gadgets"],
